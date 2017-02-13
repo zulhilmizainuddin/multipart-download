@@ -1,0 +1,14 @@
+{
+  "name": "parallel-download",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.79.0"
+  }
+}
