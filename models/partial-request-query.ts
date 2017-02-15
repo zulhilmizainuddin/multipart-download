@@ -1,11 +1,14 @@
+/// <reference path='../node_modules/@types/node/index.d.ts' />
+/// <reference path='../node_modules/@types/request/index.d.ts' />
+
 import request = require('request');
 
 interface PartialRequestMetadata {
-    acceptRanges: string;
-    contentLength: number;
+    readonly acceptRanges: string;
+    readonly contentLength: number;
 }
 
-export class PartialRequestQuery {
+export default class PartialRequestQuery {
     public getMetadata(url: string): Promise<PartialRequestMetadata> {
 
         return new Promise<PartialRequestMetadata>((resolve, reject) => {
