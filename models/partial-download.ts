@@ -5,30 +5,38 @@ import event = require('events');
 import fs = require('fs');
 import request = require('request');
 
+import HttpStatus = require('http-status-codes');
+
+import PathFormatter from '../utilities/path-formatter';
+import UrlParser from '../utilities/url-parser';
+
 interface PartialDownloadArgs {
     readonly start: number;
     readonly end: number;
-    readonly location: string;
 }
 
-export class PartialDownload extends event.EventEmitter {
+export default class PartialDownload extends event.EventEmitter {
 
-    public start(url: string, args: PartialDownloadArgs): void {
+    public start(url: string, directory: string, args: PartialDownloadArgs): void {
 
-       const options = {
-                headers: {
-                    Range: `bytes=${args.start}-${args.end}`
+        const filename: string = `${UrlParser.getFilename(url)}_${args.start}`;
+
+        const options: request.CoreOptions = {
+                    headers: {
+                        Range: `bytes=${args.start}-${args.end}`
+                    }
+                };
+
+        request
+            .get(url, options)
+            .on('error', (err) => {
+                this.emit('error', filename);
+            })
+            .on('response', (response) => {
+                if (response.statusCode === HttpStatus.PARTIAL_CONTENT) {
+                    this.emit('done', filename);
                 }
-            };
-
-            request
-                .get(url, options)
-                .on('error', (err) => {
-
-                })
-                .on('response', (response) => {
-                    console.log(response.headers);
-                })
-                .pipe(fs.createWriteStream(`${args.location}\\file.txt`));
+            })
+            .pipe(fs.createWriteStream(PathFormatter.format(directory, filename)));
     }
 }
