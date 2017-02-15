@@ -19,7 +19,7 @@ export default class PartialDownload extends event.EventEmitter {
 
     public start(url: string, directory: string, args: PartialDownloadArgs): void {
 
-        const filename: string = `${UrlParser.getFilename(url)}_${args.start}`;
+        const filename: string = `${UrlParser.getFilename(url)}_${args.start}_${args.end}`;
 
         const options: request.CoreOptions = {
                     headers: {
@@ -30,7 +30,7 @@ export default class PartialDownload extends event.EventEmitter {
         request
             .get(url, options)
             .on('error', (err) => {
-                this.emit('error', filename);
+                this.emit('error', filename, args.start, args.end);
             })
             .on('response', (response) => {
                 if (response.statusCode === HttpStatus.PARTIAL_CONTENT) {
