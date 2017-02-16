@@ -7,30 +7,27 @@ import request = require('request');
 
 import HttpStatus = require('http-status-codes');
 
+import PartialDownloadRange from './partial-download-range';
+
 import PathFormatter from '../utilities/path-formatter';
 import UrlParser from '../utilities/url-parser';
 
-interface PartialDownloadArgs {
-    readonly start: number;
-    readonly end: number;
-}
-
 export default class PartialDownload extends event.EventEmitter {
 
-    public start(url: string, directory: string, args: PartialDownloadArgs): void {
+    public start(url: string, directory: string, range: PartialDownloadRange): void {
 
-        const filename: string = `${UrlParser.getFilename(url)}_${args.start}_${args.end}`;
+        const filename: string = `${UrlParser.getFilename(url)}_${range.start}_${range.end}`;
 
         const options: request.CoreOptions = {
                     headers: {
-                        Range: `bytes=${args.start}-${args.end}`
+                        Range: `bytes=${range.start}-${range.end}`
                     }
                 };
 
         request
             .get(url, options)
             .on('error', (err) => {
-                this.emit('error', filename, args.start, args.end);
+                this.emit('error', filename, range.start, range.end);
             })
             .on('response', (response) => {
                 if (response.statusCode === HttpStatus.PARTIAL_CONTENT) {
