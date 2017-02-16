@@ -27,13 +27,16 @@ export default class PartialDownload extends event.EventEmitter {
         request
             .get(url, options)
             .on('error', (err) => {
-                this.emit('error', filename, range.start, range.end);
+                this.emit('error', err);
             })
             .on('response', (response) => {
                 if (response.statusCode === HttpStatus.PARTIAL_CONTENT) {
-                    this.emit('done', filename);
+                    // this.emit('done', filename);
                 }
             })
-            .pipe(fs.createWriteStream(PathFormatter.format(directory, filename)));
+            .pipe(fs.createWriteStream(PathFormatter.format(directory, filename)))
+            .on('finish', () => {
+                this.emit('finish', filename);
+            });
     }
 }
