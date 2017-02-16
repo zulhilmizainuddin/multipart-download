@@ -1,7 +1,7 @@
 /// <reference path='./node_modules/@types/node/index.d.ts' />
 /// <reference path='./node_modules/@types/request/index.d.ts' />
 
-import FileSizing from './utilities/file-segmentation';
+import FileSegmentation from './utilities/file-segmentation';
 import PartialDownload from './models/partial-download';
 import PartialDownloadRange from './models/partial-download-range';
 import PartialRequestQuery from './models/partial-request-query';
