@@ -7,10 +7,18 @@ import request = require('request');
 
 import HttpStatus = require('http-status-codes');
 
-import PartialDownloadRange from './partial-download-range';
-
 import PathFormatter from '../utilities/path-formatter';
 import UrlParser from '../utilities/url-parser';
+
+export interface PartialDownloadRange {
+    readonly start: number;
+    readonly end: number;
+}
+
+export interface DownloadResult {
+    readonly start: number;
+    readonly filename: string;
+}
 
 export default class PartialDownload extends event.EventEmitter {
 
@@ -29,14 +37,10 @@ export default class PartialDownload extends event.EventEmitter {
             .on('error', (err) => {
                 this.emit('error', err);
             })
-            .on('response', (response) => {
-                if (response.statusCode === HttpStatus.PARTIAL_CONTENT) {
-                    // this.emit('done', filename);
-                }
-            })
             .pipe(fs.createWriteStream(PathFormatter.format(directory, filename)))
             .on('finish', () => {
-                this.emit('finish', filename);
+                const result: DownloadResult = {start: range.start, filename: filename}
+                this.emit('finish', result);
             });
     }
 }
