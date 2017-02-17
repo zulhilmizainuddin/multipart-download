@@ -30,29 +30,10 @@ export default class ParallelDownload {
                             downloadResults.push(downloadResult);
 
                             if (downloadResults.length === segmentsRange.length) {
-                                downloadResults.sort((x, y) => {
-                                    return x.start - y.start;
-                                });
+                                downloadResults = this.prepareDownloadResults(directory, downloadResults);
+                                downloadResults = this.sortDownloadResults(downloadResults);
 
-                                downloadResults = downloadResults.map((value, index, array) => {
-                                    const filenameWithPath: string = PathFormatter.format(directory, value.filename);
-                                    const result: DownloadResult = {start: value.start, filename: filenameWithPath};
-
-                                    return result;
-                                });
-
-                                let fileToBeConcatenated: string = UrlParser.getFilename(url);
-                                fileToBeConcatenated = PathFormatter.format(directory, fileToBeConcatenated);
-                                
-                                const downloadedFiles: string[] = downloadResults.map((value, index, array) => {
-                                    return value.filename;
-                                });
-
-                                concat(downloadedFiles, fileToBeConcatenated, (err) => {
-                                    if (err) {
-                                        throw err;
-                                    }
-                                });
+                                this.concatenateFiles(url, directory, downloadResults);
                             }
                         })
                         .on('error', (err) => {
@@ -63,5 +44,39 @@ export default class ParallelDownload {
             .catch((err) => {
                 throw err;
             });
+    }
+
+    private prepareDownloadResults(directory: string, downloadResults: DownloadResult[]): DownloadResult[] {
+        const preparedResults = downloadResults.map((value, index, array) => {
+            const filenameWithPath: string = PathFormatter.format(directory, value.filename);
+            const result: DownloadResult = {start: value.start, filename: filenameWithPath};
+
+            return result;
+        });
+
+        return preparedResults;
+    }
+
+    private sortDownloadResults(downloadResults: DownloadResult[]): DownloadResult[] {
+        downloadResults.sort((x, y) => {
+            return x.start - y.start;
+        });
+
+        return downloadResults;
+    }
+
+    private concatenateFiles(url: string, directory: string, downloadResults: DownloadResult[]): void {
+        let fileToBeConcatenated: string = UrlParser.getFilename(url);
+        fileToBeConcatenated = PathFormatter.format(directory, fileToBeConcatenated);
+        
+        const downloadedFiles: string[] = downloadResults.map((value, index, array) => {
+            return value.filename;
+        });
+
+        concat(downloadedFiles, fileToBeConcatenated, (err) => {
+            if (err) {
+                throw err;
+            }
+        });
     }
 }
