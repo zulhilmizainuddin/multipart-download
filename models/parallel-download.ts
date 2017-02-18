@@ -1,8 +1,8 @@
 /// <reference path='../node_modules/@types/node/index.d.ts' />
-/// <reference path='../node_modules/@types/request/index.d.ts' />
 
 import concat = require('concat-files');
 
+import FileDeleter from '../utilities/file-deleter';
 import FileSegmentation from '../utilities/file-segmentation';
 import PathFormatter from '../utilities/path-formatter';
 import UrlParser from '../utilities/url-parser';
@@ -33,7 +33,7 @@ export default class ParallelDownload {
                                 downloadResults = this.prepareDownloadResults(directory, downloadResults);
                                 downloadResults = this.sortDownloadResults(downloadResults);
 
-                                this.concatenateFiles(url, directory, downloadResults);
+                                this.concatPartialFiles(url, directory, downloadResults);
                             }
                         })
                         .on('error', (err) => {
@@ -65,7 +65,7 @@ export default class ParallelDownload {
         return downloadResults;
     }
 
-    private concatenateFiles(url: string, directory: string, downloadResults: DownloadResult[]): void {
+    private concatPartialFiles(url: string, directory: string, downloadResults: DownloadResult[]): void {
         let fileToBeConcatenated: string = UrlParser.getFilename(url);
         fileToBeConcatenated = PathFormatter.format(directory, fileToBeConcatenated);
         
@@ -77,6 +77,12 @@ export default class ParallelDownload {
             if (err) {
                 throw err;
             }
+
+            this.deletePartialFiles(...downloadedFiles)
         });
+    }
+
+    private deletePartialFiles(...partialFiles: string[]): void {
+        FileDeleter.delete(...partialFiles);
     }
 }
