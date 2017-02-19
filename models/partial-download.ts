@@ -35,7 +35,7 @@ export default class PartialDownload extends event.EventEmitter {
         request
             .get(url, options)
             .on('error', (err) => {
-                this.emit('error', err);
+                throw err;
             })
             .pipe(fs.createWriteStream(PathFormatter.format(directory, filename)))
             .on('finish', () => {

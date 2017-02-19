@@ -11,51 +11,71 @@ import Validation from '../utilities/validation';
 import PartialDownload, {DownloadResult, PartialDownloadRange} from '../models/partial-download';
 import PartialRequestQuery from '../models/partial-request-query';
 
-export default class ParallelDownload {
-    public start(url: string, numOfDownloader: number, directory: string): void {
+export interface ParallelOperation {
+    start(url: string, numOfConnections: number, directory: string): Promise<string>;
+}
 
-        this.validateInputs(url, directory);
+export default class ParallelDownload implements ParallelOperation {
 
-        let downloadResults: DownloadResult[] = [];
+    public start(url: string, numOfConnections: number, directory: string): Promise<string> {
+        return new Promise((resolve, reject) => {
 
-        new PartialRequestQuery()
-            .getMetadata(url)
-            .then((metadata) => {
-                const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(metadata.contentLength, numOfDownloader);
-                for (let segmentRange of segmentsRange) {
-                    const partialDownload: PartialDownload = new PartialDownload();
+            const validationError = this.validateInputs(url, directory);
+            if (validationError) {
+                reject(validationError);
+                return;
+            }
 
-                    partialDownload.start(url, directory, segmentRange);
+            let downloadResults: DownloadResult[] = [];
 
-                    partialDownload
-                        .on('finish', (downloadResult) => {
-                            downloadResults.push(downloadResult);
+            new PartialRequestQuery()
+                .getMetadata(url)
+                .then((metadata) => {
+                    const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(metadata.contentLength, numOfConnections);
+                    for (let segmentRange of segmentsRange) {
+                        const partialDownload: PartialDownload = new PartialDownload();
 
-                            if (downloadResults.length === segmentsRange.length) {
-                                downloadResults = this.prepareDownloadResults(directory, downloadResults);
-                                downloadResults = this.sortDownloadResults(downloadResults);
+                        partialDownload.start(url, directory, segmentRange);
 
-                                this.concatPartialFiles(url, directory, downloadResults);
-                            }
-                        })
-                        .on('error', (err) => {
-                            throw err;
-                        });
-                }
-            })
-            .catch((err) => {
-                throw err;
-            });
+                        partialDownload
+                            .on('finish', (downloadResult) => {
+                                downloadResults.push(downloadResult);
+
+                                if (downloadResults.length === segmentsRange.length) {
+                                    downloadResults = this.prepareDownloadResults(directory, downloadResults);
+                                    downloadResults = this.sortDownloadResults(downloadResults);
+
+                                    this.concatPartialFiles(url, directory, downloadResults, (err, concatenatedFilePath) => {
+                                        downloadResults.forEach((value, index, array) => {
+                                            this.deletePartialFiles(value.filename);
+                                        })
+
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            resolve(concatenatedFilePath);
+                                        }
+                                    });
+                                }
+                            });
+                    }
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     }
 
-    private validateInputs(url: string, directory: string): void {
+    private validateInputs(url: string, directory: string): Error {
         if (!Validation.isUrl(url)) {
-            throw new Error('Invalid URL provided');
+            return new Error('Invalid URL provided');
         }
 
         if (!Validation.isDirectory(directory)) {
-            throw new Error('Invalid directory provided');
+            return new Error('Invalid directory provided');
         }
+
+        return null;
     }
 
     private prepareDownloadResults(directory: string, downloadResults: DownloadResult[]): DownloadResult[] {
@@ -77,7 +97,7 @@ export default class ParallelDownload {
         return downloadResults;
     }
 
-    private concatPartialFiles(url: string, directory: string, downloadResults: DownloadResult[]): void {
+    private concatPartialFiles(url: string, directory: string, downloadResults: DownloadResult[], callback: (err: Error, concatenatedFilePath: string) => void): void {
         let fileToBeConcatenated: string = UrlParser.getFilename(url);
         fileToBeConcatenated = PathFormatter.format(directory, fileToBeConcatenated);
         
@@ -86,11 +106,7 @@ export default class ParallelDownload {
         });
 
         concat(downloadedFiles, fileToBeConcatenated, (err) => {
-            if (err) {
-                throw err;
-            }
-
-            this.deletePartialFiles(...downloadedFiles)
+            callback(err, fileToBeConcatenated);
         });
     }
 
