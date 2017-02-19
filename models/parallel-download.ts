@@ -6,17 +6,19 @@ import FileDeleter from '../utilities/file-deleter';
 import FileSegmentation from '../utilities/file-segmentation';
 import PathFormatter from '../utilities/path-formatter';
 import UrlParser from '../utilities/url-parser';
+import Validation from '../utilities/validation';
 
 import PartialDownload, {DownloadResult, PartialDownloadRange} from '../models/partial-download';
 import PartialRequestQuery from '../models/partial-request-query';
 
 export default class ParallelDownload {
     public start(url: string, numOfDownloader: number, directory: string): void {
-        const partialRequestQuery: PartialRequestQuery = new PartialRequestQuery();
+
+        this.validateInputs(url, directory);
 
         let downloadResults: DownloadResult[] = [];
 
-        partialRequestQuery
+        new PartialRequestQuery()
             .getMetadata(url)
             .then((metadata) => {
                 const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(metadata.contentLength, numOfDownloader);
@@ -44,6 +46,16 @@ export default class ParallelDownload {
             .catch((err) => {
                 throw err;
             });
+    }
+
+    private validateInputs(url: string, directory: string): void {
+        if (!Validation.isUrl(url)) {
+            throw new Error('Invalid URL provided');
+        }
+
+        if (!Validation.isDirectory(directory)) {
+            throw new Error('Invalid directory provided');
+        }
     }
 
     private prepareDownloadResults(directory: string, downloadResults: DownloadResult[]): DownloadResult[] {
