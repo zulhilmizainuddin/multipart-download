@@ -1,6 +1,7 @@
 /// <reference path='../node_modules/@types/node/index.d.ts' />
 
 import concat = require('concat-files');
+import os = require('os');
 
 import FileDeleter from '../utilities/file-deleter';
 import FileSegmentation from '../utilities/file-segmentation';
@@ -12,12 +13,12 @@ import PartialDownload, {DownloadResult, PartialDownloadRange} from '../models/p
 import PartialRequestQuery from '../models/partial-request-query';
 
 export interface ParallelOperation {
-    start(url: string, numOfConnections: number, directory: string): Promise<string>;
+    start(url: string, numOfConnections: number, directory?: string): Promise<string>;
 }
 
 export default class ParallelDownload implements ParallelOperation {
 
-    public start(url: string, numOfConnections: number, directory: string): Promise<string> {
+    public start(url: string, numOfConnections: number, directory: string = os.tmpdir()): Promise<string> {
         return new Promise((resolve, reject) => {
 
             const validationError = this.validateInputs(url, directory);
