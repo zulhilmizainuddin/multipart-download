@@ -11,6 +11,6 @@ export default class Validation {
     }
 
     public static isUrl(url: string): boolean {
-        return validator.isUrl(url);
+        return validator.isURL(url);
     }
 }
