@@ -22,7 +22,7 @@ export interface DownloadResult {
 
 export default class PartialDownload extends event.EventEmitter {
 
-    public start(url: string, directory: string, range: PartialDownloadRange): void {
+    public start(url: string, directory: string, range: PartialDownloadRange): PartialDownload {
 
         const filename: string = `${UrlParser.getFilename(url)}_${range.start}_${range.end}`;
 
@@ -42,5 +42,7 @@ export default class PartialDownload extends event.EventEmitter {
                 const result: DownloadResult = {start: range.start, filename: filename}
                 this.emit('finish', result);
             });
+
+        return this;
     }
 }

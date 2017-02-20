@@ -34,11 +34,9 @@ export default class ParallelDownload implements ParallelOperation {
                 .then((metadata) => {
                     const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(metadata.contentLength, numOfConnections);
                     for (let segmentRange of segmentsRange) {
-                        const partialDownload: PartialDownload = new PartialDownload();
-
-                        partialDownload.start(url, directory, segmentRange);
-
-                        partialDownload
+                        
+                        new PartialDownload()
+                            .start(url, directory, segmentRange)
                             .on('finish', (downloadResult) => {
                                 downloadResults.push(downloadResult);
 
