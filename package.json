@@ -9,8 +9,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "concat-files": "^0.1.1",
-    "http-status-codes": "^1.1.6",
     "request": "^2.79.0",
     "validator": "^6.2.1"
   },

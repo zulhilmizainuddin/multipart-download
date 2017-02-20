@@ -1,9 +1,9 @@
 /// <reference path='../node_modules/@types/node/index.d.ts' />
 
 import concat = require('concat-files');
+import fs = require('fs');
 import os = require('os');
 
-import FileDeleter from '../utilities/file-deleter';
 import FileSegmentation from '../utilities/file-segmentation';
 import PathFormatter from '../utilities/path-formatter';
 import UrlParser from '../utilities/url-parser';
@@ -27,35 +27,24 @@ export default class ParallelDownload implements ParallelOperation {
                 return;
             }
 
-            let downloadResults: DownloadResult[] = [];
-
+            const filePath: string = this.createFile(url, directory);
+            
+            let writeStream: fs.WriteStream;
+            
             new PartialRequestQuery()
                 .getMetadata(url)
                 .then((metadata) => {
                     const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(metadata.contentLength, numOfConnections);
                     for (let segmentRange of segmentsRange) {
-                        
+
                         new PartialDownload()
                             .start(url, directory, segmentRange)
-                            .on('finish', (downloadResult) => {
-                                downloadResults.push(downloadResult);
-
-                                if (downloadResults.length === segmentsRange.length) {
-                                    downloadResults = this.prepareDownloadResults(directory, downloadResults);
-                                    downloadResults = this.sortDownloadResults(downloadResults);
-
-                                    this.concatPartialFiles(url, directory, downloadResults, (err, concatenatedFilePath) => {
-                                        downloadResults.forEach((value, index, array) => {
-                                            this.deletePartialFiles(value.filename);
-                                        })
-
-                                        if (err) {
-                                            reject(err);
-                                        } else {
-                                            resolve(concatenatedFilePath);
-                                        }
-                                    });
-                                }
+                            .on('data', (data, offset) => {
+                                writeStream = fs.createWriteStream(filePath, {flags: 'r+', start: offset});
+                                writeStream.write(data);
+                            })
+                            .on('end', () => {
+                                writeStream.end();
                             });
                     }
                 })
@@ -81,39 +70,12 @@ export default class ParallelDownload implements ParallelOperation {
         return null;
     }
 
-    private prepareDownloadResults(directory: string, downloadResults: DownloadResult[]): DownloadResult[] {
-        const preparedResults = downloadResults.map((value, index, array) => {
-            const filenameWithPath: string = PathFormatter.format(directory, value.filename);
-            const result: DownloadResult = {start: value.start, filename: filenameWithPath};
+    private createFile(url: string, directory: string): string {
+        const filename: string = UrlParser.getFilename(url);
+        const filePath: string = PathFormatter.format(directory, filename);
 
-            return result;
-        });
+        fs.createWriteStream(filePath).end();
 
-        return preparedResults;
-    }
-
-    private sortDownloadResults(downloadResults: DownloadResult[]): DownloadResult[] {
-        downloadResults.sort((x, y) => {
-            return x.start - y.start;
-        });
-
-        return downloadResults;
-    }
-
-    private concatPartialFiles(url: string, directory: string, downloadResults: DownloadResult[], callback: (err: Error, concatenatedFilePath: string) => void): void {
-        let fileToBeConcatenated: string = UrlParser.getFilename(url);
-        fileToBeConcatenated = PathFormatter.format(directory, fileToBeConcatenated);
-        
-        const downloadedFiles: string[] = downloadResults.map((value, index, array) => {
-            return value.filename;
-        });
-
-        concat(downloadedFiles, fileToBeConcatenated, (err) => {
-            callback(err, fileToBeConcatenated);
-        });
-    }
-
-    private deletePartialFiles(...partialFiles: string[]): void {
-        FileDeleter.delete(...partialFiles);
+        return filePath;
     }
 }
