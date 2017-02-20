@@ -4,8 +4,6 @@
 import event = require('events');
 import request = require('request');
 
-import UrlParser from '../utilities/url-parser';
-
 export interface PartialDownloadRange {
     readonly start: number;
     readonly end: number;
@@ -14,8 +12,6 @@ export interface PartialDownloadRange {
 export default class PartialDownload extends event.EventEmitter {
 
     public start(url: string, range: PartialDownloadRange): PartialDownload {
-
-        const filename: string = `${UrlParser.getFilename(url)}_${range.start}_${range.end}`;
 
         const options: request.CoreOptions = {
                     headers: {
