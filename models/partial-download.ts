@@ -11,14 +11,9 @@ export interface PartialDownloadRange {
     readonly end: number;
 }
 
-export interface DownloadResult {
-    readonly start: number;
-    readonly filename: string;
-}
-
 export default class PartialDownload extends event.EventEmitter {
 
-    public start(url: string, directory: string, range: PartialDownloadRange): PartialDownload {
+    public start(url: string, range: PartialDownloadRange): PartialDownload {
 
         const filename: string = `${UrlParser.getFilename(url)}_${range.start}_${range.end}`;
 

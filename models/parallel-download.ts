@@ -8,7 +8,7 @@ import PathFormatter from '../utilities/path-formatter';
 import UrlParser from '../utilities/url-parser';
 import Validation from '../utilities/validation';
 
-import PartialDownload, {DownloadResult, PartialDownloadRange} from '../models/partial-download';
+import PartialDownload, {PartialDownloadRange} from '../models/partial-download';
 import PartialRequestQuery from '../models/partial-request-query';
 
 export interface ParallelOperation {
@@ -37,7 +37,7 @@ export default class ParallelDownload implements ParallelOperation {
                     for (let segmentRange of segmentsRange) {
 
                         new PartialDownload()
-                            .start(url, directory, segmentRange)
+                            .start(url, segmentRange)
                             .on('data', (data, offset) => {
                                 writeStream = fs.createWriteStream(filePath, {flags: 'r+', start: offset});
                                 writeStream.write(data);
