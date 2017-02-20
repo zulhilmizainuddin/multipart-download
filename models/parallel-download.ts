@@ -1,6 +1,5 @@
 /// <reference path='../node_modules/@types/node/index.d.ts' />
 
-import concat = require('concat-files');
 import fs = require('fs');
 import os = require('os');
 
