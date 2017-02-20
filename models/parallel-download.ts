@@ -21,7 +21,7 @@ export default class ParallelDownload implements ParallelOperation {
     public start(url: string, numOfConnections: number, directory: string = os.tmpdir()): Promise<string> {
         return new Promise((resolve, reject) => {
 
-            const validationError = this.validateInputs(url, directory);
+            const validationError = this.validateInputs(url, numOfConnections, directory);
             if (validationError) {
                 reject(validationError);
                 return;
@@ -67,9 +67,13 @@ export default class ParallelDownload implements ParallelOperation {
         });
     }
 
-    private validateInputs(url: string, directory: string): Error {
+    private validateInputs(url: string, numOfConnections: number, directory: string): Error {
         if (!Validation.isUrl(url)) {
             return new Error('Invalid URL provided');
+        }
+
+        if (!Validation.isValidNumberOfConnections(numOfConnections)) {
+            return new Error('Invalid number of connections provided');
         }
 
         if (!Validation.isDirectory(directory)) {
