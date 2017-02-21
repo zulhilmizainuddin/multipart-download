@@ -24,7 +24,7 @@ export default class ParallelDownload extends events.EventEmitter implements Par
             throw validationError;
         }
 
-        let filePath: string;
+        let filePath: string = null;
         if (saveDirectory) {
             filePath = this.createFile(url, saveDirectory);
         }
@@ -32,11 +32,11 @@ export default class ParallelDownload extends events.EventEmitter implements Par
         new PartialRequestQuery()
             .getMetadata(url)
             .then((metadata) => {
+                let writeStream: fs.WriteStream;
                 let endCounter: number = 0;
 
                 const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(metadata.contentLength, numOfConnections);
                 for (let segmentRange of segmentsRange) {
-                    let writeStream: fs.WriteStream;
 
                     new PartialDownload()
                         .start(url, segmentRange)
