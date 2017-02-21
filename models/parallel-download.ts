@@ -13,19 +13,21 @@ import PartialDownload, {PartialDownloadRange} from '../models/partial-download'
 import PartialRequestQuery from '../models/partial-request-query';
 
 export interface ParallelOperation {
-    start(url: string, numOfConnections: number): ParallelOperation;
+    start(url: string, numOfConnections: number, saveDirectory?: string): ParallelOperation;
 }
 
 export default class ParallelDownload extends events.EventEmitter implements ParallelOperation {
 
-    public start(url: string, numOfConnections: number): ParallelDownload {
-        const validationError = this.validateInputs(url, numOfConnections);
+    public start(url: string, numOfConnections: number, saveDirectory?: string): ParallelDownload {
+        const validationError = this.validateInputs(url, numOfConnections, saveDirectory);
         if (validationError) {
             throw validationError;
         }
 
-        const directory: string = os.tmpdir();
-        const filePath: string = this.createFile(url, directory);
+        let filePath: string;
+        if (saveDirectory) {
+            filePath = this.createFile(url, saveDirectory);
+        }
         
         new PartialRequestQuery()
             .getMetadata(url)
@@ -41,14 +43,18 @@ export default class ParallelDownload extends events.EventEmitter implements Par
                         .on('data', (data, offset) => {
                             this.emit('data', data, offset);
 
-                            writeStream = fs.createWriteStream(filePath, {flags: 'r+', start: offset});
-                            writeStream.write(data);
+                            if (saveDirectory) {
+                                writeStream = fs.createWriteStream(filePath, {flags: 'r+', start: offset});
+                                writeStream.write(data);
+                            }
                         })
                         .on('end', () => {
-                            writeStream.end();
+                            if (saveDirectory) {
+                                writeStream.end();
+                            }
 
                             if (++endCounter === numOfConnections) {
-                                this.emit('end');
+                                this.emit('end', filePath);
                             }
                         });
                 }
@@ -60,13 +66,17 @@ export default class ParallelDownload extends events.EventEmitter implements Par
         return this;
     }
 
-    private validateInputs(url: string, numOfConnections: number): Error {
+    private validateInputs(url: string, numOfConnections: number, saveDirectory?: string): Error {
         if (!Validation.isUrl(url)) {
             return new Error('Invalid URL provided');
         }
 
         if (!Validation.isValidNumberOfConnections(numOfConnections)) {
             return new Error('Invalid number of connections provided');
+        }
+
+        if (saveDirectory && !Validation.isDirectory(saveDirectory)) {
+            return new Error('Invalid save directory provided');
         }
 
         return null;

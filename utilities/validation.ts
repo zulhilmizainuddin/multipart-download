@@ -13,4 +13,10 @@ export default class Validation {
 
         return isValid;
     }
+
+    public static isDirectory(directory: string): boolean {
+        const stat: fs.Stats = fs.lstatSync(directory);
+
+        return stat.isDirectory();
+    }
 }
