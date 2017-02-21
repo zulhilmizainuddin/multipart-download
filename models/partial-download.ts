@@ -1,7 +1,7 @@
 /// <reference path='../node_modules/@types/node/index.d.ts' />
 /// <reference path='../node_modules/@types/request/index.d.ts' />
 
-import event = require('events');
+import events = require('events');
 import request = require('request');
 
 export interface PartialDownloadRange {
@@ -9,7 +9,7 @@ export interface PartialDownloadRange {
     readonly end: number;
 }
 
-export default class PartialDownload extends event.EventEmitter {
+export default class PartialDownload extends events.EventEmitter {
 
     public start(url: string, range: PartialDownloadRange): PartialDownload {
 

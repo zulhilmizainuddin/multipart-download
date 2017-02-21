@@ -1,6 +1,7 @@
 /// <reference path='../node_modules/@types/node/index.d.ts' />
 
 import fs = require('fs');
+import events = require('events');
 import os = require('os');
 
 import FileSegmentation from '../utilities/file-segmentation';
@@ -12,58 +13,60 @@ import PartialDownload, {PartialDownloadRange} from '../models/partial-download'
 import PartialRequestQuery from '../models/partial-request-query';
 
 export interface ParallelOperation {
-    start(url: string, numOfConnections: number, directory?: string): Promise<string>;
+    start(url: string, numOfConnections: number): ParallelOperation;
 }
 
-export default class ParallelDownload implements ParallelOperation {
+export default class ParallelDownload extends events.EventEmitter implements ParallelOperation {
 
-    public start(url: string, numOfConnections: number, directory: string = os.tmpdir()): Promise<string> {
-        return new Promise((resolve, reject) => {
-
-            const validationError = this.validateInputs(url, numOfConnections, directory);
+    public start(url: string, numOfConnections: number): ParallelDownload {
+        const validationError = this.validateInputs(url, numOfConnections);
             if (validationError) {
-                reject(validationError);
-                return;
+                throw validationError;
             }
 
+            const directory = os.tmpdir();
             const filePath: string = this.createFile(url, directory);
-            
-            let writeStream: fs.WriteStream;
             
             new PartialRequestQuery()
                 .getMetadata(url)
                 .then((metadata) => {
+                    let endCounter: number = 0;
+
                     const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(metadata.contentLength, numOfConnections);
                     for (let segmentRange of segmentsRange) {
+                        let writeStream: fs.WriteStream;
 
                         new PartialDownload()
                             .start(url, segmentRange)
                             .on('data', (data, offset) => {
+                                this.emit('data', data, offset);
+
                                 writeStream = fs.createWriteStream(filePath, {flags: 'r+', start: offset});
                                 writeStream.write(data);
                             })
                             .on('end', () => {
                                 writeStream.end();
+
+                                if (++endCounter === numOfConnections) {
+                                    this.emit('end');
+                                }
                             });
                     }
                 })
                 .catch((err) => {
-                    reject(err);
+                    throw err;
                 });
-        });
+
+            return this;
     }
 
-    private validateInputs(url: string, numOfConnections: number, directory: string): Error {
+    private validateInputs(url: string, numOfConnections: number): Error {
         if (!Validation.isUrl(url)) {
             return new Error('Invalid URL provided');
         }
 
         if (!Validation.isValidNumberOfConnections(numOfConnections)) {
             return new Error('Invalid number of connections provided');
-        }
-
-        if (!Validation.isDirectory(directory)) {
-            return new Error('Invalid directory provided');
         }
 
         return null;
