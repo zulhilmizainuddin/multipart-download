@@ -24,7 +24,7 @@ export default class ParallelDownload extends events.EventEmitter implements Par
             throw validationError;
         }
 
-        const directory = os.tmpdir();
+        const directory: string = os.tmpdir();
         const filePath: string = this.createFile(url, directory);
         
         new PartialRequestQuery()
