@@ -22,15 +22,24 @@ export default class ParallelDownload extends events.EventEmitter implements Par
         if (validationError) {
             throw validationError;
         }
-
-        let filePath: string = null;
-        if (saveDirectory) {
-            filePath = this.createFile(url, saveDirectory);
-        }
         
         new PartialRequestQuery()
             .getMetadata(url)
             .then((metadata) => {
+
+                if (isNaN(metadata.contentLength)) {
+                    throw new Error(`Failed to query Content-Length of ${url}`);
+                }
+
+                if (metadata.acceptRanges !== 'bytes') {
+                    numOfConnections = 1;
+                }
+
+                let filePath: string = null;
+                if (saveDirectory) {
+                    filePath = this.createFile(url, saveDirectory);
+                }
+
                 let writeStream: fs.WriteStream;
                 let endCounter: number = 0;
 
