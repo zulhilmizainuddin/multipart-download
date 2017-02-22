@@ -17,6 +17,6 @@ describe('File download segmentation', () => {
 
         const result: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(1000, 5);
 
-        expect(downloadRanges).to.deep.equal(result);
+        expect(result).to.deep.equal(downloadRanges);
     });
 });
