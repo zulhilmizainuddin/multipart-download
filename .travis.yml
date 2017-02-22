@@ -1,11 +1,7 @@
 language: node_js
 node_js: "node"
 
-sudo: required
 dist: trusty
-
-before_install:
-- sudo apt-get -y update
 
 install:
  - npm install -g typescript
@@ -13,4 +9,4 @@ install:
 
 script:
  - tsc -p .
-#  - npm test
+ - npm test

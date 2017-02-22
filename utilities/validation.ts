@@ -15,8 +15,15 @@ export default class Validation {
     }
 
     public static isDirectory(directory: string): boolean {
-        const stat: fs.Stats = fs.lstatSync(directory);
+        let isDirectory: boolean;
 
-        return stat.isDirectory();
+        try {
+            const stat: fs.Stats = fs.lstatSync(directory);
+            isDirectory = stat.isDirectory();
+        } catch(err) {
+            isDirectory = false;
+        }
+        
+        return isDirectory;
     }
 }
