@@ -2,7 +2,6 @@
 
 import events = require('events');
 import fs = require('fs');
-import os = require('os');
 
 import FileSegmentation from '../utilities/file-segmentation';
 import PathFormatter from '../utilities/path-formatter';
