@@ -3,7 +3,7 @@
 
 import request = require('request');
 
-interface PartialRequestMetadata {
+export interface PartialRequestMetadata {
     readonly acceptRanges: string;
     readonly contentLength: number;
 }

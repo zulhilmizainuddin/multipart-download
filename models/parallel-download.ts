@@ -9,7 +9,7 @@ import UrlParser from '../utilities/url-parser';
 import Validation from '../utilities/validation';
 
 import PartialDownload, {PartialDownloadRange} from '../models/partial-download';
-import PartialRequestQuery from '../models/partial-request-query';
+import PartialRequestQuery, {PartialRequestMetadata} from '../models/partial-request-query';
 
 export interface ParallelOperation {
     start(url: string, numOfConnections: number, saveDirectory?: string): ParallelOperation;
@@ -18,7 +18,7 @@ export interface ParallelOperation {
 export default class ParallelDownload extends events.EventEmitter implements ParallelOperation {
 
     public start(url: string, numOfConnections: number, saveDirectory?: string): ParallelDownload {
-        const validationError = this.validateInputs(url, numOfConnections, saveDirectory);
+        const validationError: Error = this.validateInputs(url, numOfConnections, saveDirectory);
         if (validationError) {
             throw validationError;
         }
@@ -27,8 +27,9 @@ export default class ParallelDownload extends events.EventEmitter implements Par
             .getMetadata(url)
             .then((metadata) => {
 
-                if (isNaN(metadata.contentLength)) {
-                    throw new Error(`Failed to query Content-Length of ${url}`);
+                const metadataError: Error = this.validateMetadata(url, metadata);
+                if (metadataError) {
+                    throw metadataError;
                 }
 
                 if (metadata.acceptRanges !== 'bytes') {
@@ -85,6 +86,14 @@ export default class ParallelDownload extends events.EventEmitter implements Par
 
         if (saveDirectory && !Validation.isDirectory(saveDirectory)) {
             return new Error('Invalid save directory provided');
+        }
+
+        return null;
+    }
+
+    private validateMetadata(url: string, metadata: PartialRequestMetadata): Error {
+        if (isNaN(metadata.contentLength)) {
+            return new Error(`Failed to query Content-Length of ${url}`);
         }
 
         return null;
