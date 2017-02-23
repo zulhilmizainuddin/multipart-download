@@ -9,7 +9,7 @@ import TestConfig from './test-config';
 
 import MultipartDownload from '../models/multipart-download';
 
-describe('Parallel download', () => {
+describe('Multipart download', () => {
     it('download with Accept-Ranges header without saving file', function(done) {
         this.timeout(TestConfig.Timeout);
 
