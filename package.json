@@ -4,7 +4,8 @@
   "description": "Speed up download of a single file with multiple HTTP GET connections running in parallel",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "postinstall": "node ./node_modules/typescript/bin/tsc -p ."
   },
   "author": "Zulhilmi Mohamed Zainuddin",
   "license": "MIT",
@@ -33,6 +34,7 @@
     "@types/node": "^7.0.5",
     "@types/request": "0.0.39",
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "typescript": "^2.2.1"
   }
 }
