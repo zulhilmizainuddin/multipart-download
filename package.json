@@ -13,12 +13,14 @@
     "url": "https://github.com/zulhilmizainuddin/parallel-download.git"
   },
   "keywords": [
+    "accept",
     "connection",
     "download",
     "get",
     "http",
     "multiple",
     "parallel",
+    "range",
     "speed"
   ],
   "dependencies": {
