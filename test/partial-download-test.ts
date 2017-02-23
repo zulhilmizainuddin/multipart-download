@@ -2,16 +2,18 @@
 
 import {expect} from 'chai';
 
+import TestConfig from './test-config';
+
 import PartialDownload from '../models/partial-download';
 
 describe('Partial download', () => {
     it('download a segment of a file', function(done) {
-        this.timeout(5000);
+        this.timeout(TestConfig.Timeout);
 
         let segmentSize: number = 0;
 
         new PartialDownload()
-            .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {start: 0, end: 199})
+            .start(TestConfig.AcceptRangesSupportedUrl.url, {start: 0, end: 199})
             .on('data', (data, offset) => {
                 segmentSize += data.length;
             })
