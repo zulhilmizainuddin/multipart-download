@@ -2,6 +2,7 @@
 
 import {expect} from 'chai';
 
+import AcceptRanges from '../models/accept-ranges';
 import PartialRequestQuery from '../models/partial-request-query';
 
 describe('Partial request query', () => {
@@ -13,7 +14,7 @@ describe('Partial request query', () => {
         partialRequestQuery
             .getMetadata('https://homepages.cae.wisc.edu/~ece533/images/cat.png')
             .then((metadata) => {
-                expect(metadata.acceptRanges).to.equal('bytes');
+                expect(metadata.acceptRanges).to.equal(AcceptRanges.Bytes);
                 expect(metadata.contentLength).to.not.be.NaN;
                 done();
             });

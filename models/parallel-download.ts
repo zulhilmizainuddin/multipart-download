@@ -8,6 +8,7 @@ import PathFormatter from '../utilities/path-formatter';
 import UrlParser from '../utilities/url-parser';
 import Validation from '../utilities/validation';
 
+import AcceptRanges from '../models/accept-ranges';
 import PartialDownload, {PartialDownloadRange} from '../models/partial-download';
 import PartialRequestQuery, {PartialRequestMetadata} from '../models/partial-request-query';
 
@@ -32,7 +33,7 @@ export default class ParallelDownload extends events.EventEmitter implements Par
                     throw metadataError;
                 }
 
-                if (metadata.acceptRanges !== 'bytes') {
+                if (metadata.acceptRanges !== AcceptRanges.Bytes) {
                     numOfConnections = 1;
                 }
 

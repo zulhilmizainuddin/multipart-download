@@ -4,6 +4,8 @@
 import events = require('events');
 import request = require('request');
 
+import AcceptRanges from '../models/accept-ranges';
+
 export interface PartialDownloadRange {
     readonly start: number;
     readonly end: number;
@@ -15,7 +17,7 @@ export default class PartialDownload extends events.EventEmitter {
 
         const options: request.CoreOptions = {
                     headers: {
-                        Range: `bytes=${range.start}-${range.end}`
+                        Range: `${AcceptRanges.Bytes}=${range.start}-${range.end}`
                     }
                 };
 
