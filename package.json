@@ -1,13 +1,26 @@
 {
   "name": "parallel-download",
   "version": "0.1.0",
-  "description": "",
+  "description": "Speed up download of a single file with multiple HTTP GET connections running in parallel",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec"
   },
-  "author": "",
+  "author": "Zulhilmi Mohamed Zainuddin",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zulhilmizainuddin/parallel-download.git"
+  },
+  "keywords": [
+    "connection",
+    "download",
+    "get",
+    "http",
+    "multiple",
+    "parallel",
+    "speed"
+  ],
   "dependencies": {
     "request": "^2.79.0",
     "validator": "^6.2.1"
