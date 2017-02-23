@@ -1,5 +1,5 @@
 {
-  "name": "parallel-download",
+  "name": "multipart-download",
   "version": "0.1.0",
   "description": "Speed up download of a single file with multiple HTTP GET connections running in parallel",
   "main": "index.js",
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zulhilmizainuddin/parallel-download.git"
+    "url": "https://github.com/zulhilmizainuddin/multipart-download.git"
   },
   "keywords": [
     "accept",

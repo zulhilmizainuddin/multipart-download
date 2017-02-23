@@ -1,3 +1,3 @@
-import ParallelDownload from './models/parallel-download';
+import MultipartDownload from './models/multipart-download';
 
-export default ParallelDownload;
+export default MultipartDownload;

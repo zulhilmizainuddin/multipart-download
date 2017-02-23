@@ -12,13 +12,13 @@ import AcceptRanges from '../models/accept-ranges';
 import PartialDownload, {PartialDownloadRange} from '../models/partial-download';
 import PartialRequestQuery, {PartialRequestMetadata} from '../models/partial-request-query';
 
-export interface ParallelOperation {
-    start(url: string, numOfConnections: number, saveDirectory?: string): ParallelOperation;
+export interface MultipartOperation {
+    start(url: string, numOfConnections: number, saveDirectory?: string): MultipartOperation;
 }
 
-export default class ParallelDownload extends events.EventEmitter implements ParallelOperation {
+export default class MultipartDownload extends events.EventEmitter implements MultipartOperation {
 
-    public start(url: string, numOfConnections: number, saveDirectory?: string): ParallelDownload {
+    public start(url: string, numOfConnections: number, saveDirectory?: string): MultipartDownload {
         const validationError: Error = this.validateInputs(url, numOfConnections, saveDirectory);
         if (validationError) {
             throw validationError;

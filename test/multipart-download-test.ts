@@ -7,7 +7,7 @@ import {expect} from 'chai';
 
 import TestConfig from './test-config';
 
-import ParallelDownload from '../models/parallel-download';
+import MultipartDownload from '../models/multipart-download';
 
 describe('Parallel download', () => {
     it('download with Accept-Ranges header without saving file', function(done) {
@@ -15,7 +15,7 @@ describe('Parallel download', () => {
 
         let fileContentLengthCounter: number = 0;
 
-        new ParallelDownload()
+        new MultipartDownload()
             .start(TestConfig.AcceptRangesSupportedUrl.url, 5)
             .on('data', (data, offset) => {
                 fileContentLengthCounter += data.length;
@@ -33,7 +33,7 @@ describe('Parallel download', () => {
 
         const directory: string = os.tmpdir();
 
-        new ParallelDownload()
+        new MultipartDownload()
             .start(TestConfig.AcceptRangesSupportedUrl.url, 5, directory)
             .on('data', (data, offset) => {
                 fileContentLengthCounter += data.length;
@@ -62,7 +62,7 @@ describe('Parallel download', () => {
 
         let fileContentLengthCounter: number = 0;
 
-        new ParallelDownload()
+        new MultipartDownload()
             .start(TestConfig.AcceptRangesUnsupportedUrl.url, 5)
             .on('data', (data, offset) => {
                 fileContentLengthCounter += data.length;
