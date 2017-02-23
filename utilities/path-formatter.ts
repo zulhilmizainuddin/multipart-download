@@ -1,5 +1,3 @@
-/// <reference path='../node_modules/@types/node/index.d.ts' />
-
 import path = require('path');
 
 export default class PathFormatter {

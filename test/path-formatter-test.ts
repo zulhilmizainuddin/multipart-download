@@ -1,5 +1,3 @@
-/// <reference path='../node_modules/@types/chai/index.d.ts' />
-
 import os = require('os');
 import path = require('path');
 

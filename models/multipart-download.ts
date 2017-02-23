@@ -1,5 +1,3 @@
-/// <reference path='../node_modules/@types/node/index.d.ts' />
-
 import events = require('events');
 import fs = require('fs');
 

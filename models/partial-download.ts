@@ -1,6 +1,3 @@
-/// <reference path='../node_modules/@types/node/index.d.ts' />
-/// <reference path='../node_modules/@types/request/index.d.ts' />
-
 import events = require('events');
 import request = require('request');
 
