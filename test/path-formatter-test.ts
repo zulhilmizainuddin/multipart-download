@@ -3,7 +3,7 @@ import path = require('path');
 
 import {expect} from 'chai';
 
-import PathFormatter from '../utilities/path-formatter';
+import PathFormatter from '../src/utilities/path-formatter';
 
 describe('Path formatter', () => {
     it('is correct path format', () => {
