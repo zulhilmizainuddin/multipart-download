@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 
-import Validation from '../src/utilities/validation';
+import Validation from '../utilities/validation';
 
 describe('Input validation', () => {
     it('is valid url', () => {

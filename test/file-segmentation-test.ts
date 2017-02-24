@@ -1,8 +1,8 @@
 import {expect} from 'chai';
 
-import FileSegmentation from '../src/utilities/file-segmentation';
+import FileSegmentation from '../utilities/file-segmentation';
 
-import {PartialDownloadRange} from '../src/models/partial-download';
+import {PartialDownloadRange} from '../models/partial-download';
 
 describe('File download segmentation', () => {
     it('is correct size segmentation', () => {

@@ -2,9 +2,9 @@
   "name": "multipart-download",
   "version": "0.1.4",
   "description": "Speed up download of a single file with multiple HTTP GET connections running in parallel",
-  "main": "dist/src/index.js",
+  "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec dist/test/*.js"
+    "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "author": "Zulhilmi Mohamed Zainuddin",
   "license": "MIT",

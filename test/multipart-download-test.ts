@@ -5,7 +5,7 @@ import {expect} from 'chai';
 
 import TestConfig from './test-config';
 
-import MultipartDownload from '../src/models/multipart-download';
+import MultipartDownload from '../models/multipart-download';
 
 describe('Multipart download', () => {
     it('download with Accept-Ranges header without saving file', function(done) {
