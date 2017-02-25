@@ -1,4 +1,3 @@
 node_modules
 
-dist/test
-test/*.d.ts
+dist/test/*.js
