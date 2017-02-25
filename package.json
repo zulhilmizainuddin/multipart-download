@@ -1,6 +1,6 @@
 {
   "name": "multipart-download",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Speed up download of a single file with multiple HTTP GET connections running in parallel",
   "main": "dist/src/index.js",
   "scripts": {
