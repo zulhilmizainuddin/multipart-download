@@ -2,7 +2,8 @@
 node_modules
 test
 
-
+./dist/test
+./src
 
 .gitignore
 .travis.yml
