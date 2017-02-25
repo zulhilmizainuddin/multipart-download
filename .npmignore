@@ -1,7 +1,7 @@
 .vscode
 node_modules
+src
 test
-
 dist/test
 
 .gitignore
