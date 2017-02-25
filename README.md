@@ -15,8 +15,8 @@ MultipartDownload is an `EventEmitter`.
 
 Starts the download operation from the `url`.
 
-Multiple HTTP GET connections will only be used if the target server supports the `Range` header.
-If the target server does not support the `Range` header, only a single HTTP GET connection will be used regardless of what the `numOfConnections` is set to.
+Multiple HTTP GET connections will only be used if the target server supports partial requests.
+If the target server does not support partial requests, only a single HTTP GET connection will be used regardless of what the `numOfConnections` is set to.
 
 If the `saveDirectory` parameter was provided, the downloaded file will be saved to the `saveDirectory`.
 If the `saveDirectory` parameter was not provided, the downloaded file will not be saved.
