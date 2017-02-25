@@ -1,4 +1,4 @@
-interface ContentLengthUrlPair {
+export interface ContentLengthUrlPair {
     readonly contentLength: number;
     readonly url: string;
 }
