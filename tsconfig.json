@@ -4,8 +4,7 @@
         "target": "es6",
         "noImplicitAny": false,
         "sourceMap": false,
-        "outDir": "dist",
-        "declaration": true
+        "outDir": "dist"
     },
     "exclude": [
         ".vscode",
