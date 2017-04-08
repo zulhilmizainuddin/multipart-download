@@ -11,13 +11,13 @@ import PartialDownload, {PartialDownloadRange} from '../models/partial-download'
 import PartialRequestQuery, {PartialRequestMetadata} from '../models/partial-request-query';
 
 export interface MultipartOperation {
-    start(url: string, numOfConnections: number, saveDirectory?: string): MultipartOperation;
+    start(url: string, numOfConnections: number, saveDirectory?: string, filename?: string): MultipartOperation;
 }
 
 export default class MultipartDownload extends events.EventEmitter implements MultipartOperation {
 
-    public start(url: string, numOfConnections: number, saveDirectory?: string): MultipartDownload {
-        const validationError: Error = this.validateInputs(url, numOfConnections, saveDirectory);
+    public start(url: string, numOfConnections: number, saveDirectory?: string, filename?: string): MultipartDownload {
+        const validationError: Error = this.validateInputs(url, numOfConnections, saveDirectory, filename);
         if (validationError) {
             throw validationError;
         }
@@ -37,7 +37,7 @@ export default class MultipartDownload extends events.EventEmitter implements Mu
 
                 let filePath: string = null;
                 if (saveDirectory) {
-                    filePath = this.createFile(url, saveDirectory);
+                    filePath = this.createFile(url, saveDirectory, filename);
                 }
 
                 let writeStream: fs.WriteStream;
@@ -98,8 +98,8 @@ export default class MultipartDownload extends events.EventEmitter implements Mu
         return null;
     }
 
-    private createFile(url: string, directory: string): string {
-        const filename: string = UrlParser.getFilename(url);
+    private createFile(url: string, directory: string, filename?: string): string {
+        const filename: string = filename ? filename : UrlParser.getFilename(url);
         const filePath: string = PathFormatter.format(directory, filename);
 
         fs.createWriteStream(filePath).end();
