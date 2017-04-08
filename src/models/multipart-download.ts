@@ -99,8 +99,8 @@ export default class MultipartDownload extends events.EventEmitter implements Mu
     }
 
     private createFile(url: string, directory: string, filename?: string): string {
-        const filename: string = filename ? filename : UrlParser.getFilename(url);
-        const filePath: string = PathFormatter.format(directory, filename);
+        const _filename: string = filename ? filename : UrlParser.getFilename(url);
+        const filePath: string = PathFormatter.format(directory, _filename);
 
         fs.createWriteStream(filePath).end();
 
