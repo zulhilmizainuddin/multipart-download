@@ -8,10 +8,11 @@ Speed up download of a single file with multiple HTTP GET connections running in
 
 MultipartDownload is an `EventEmitter`.
 
-### start(url, numOfConnections[, saveDirectory])
+### start(url, numOfConnections[, saveDirectory, filename])
 - `url` &lt;string&gt; Url of file to be downloaded
 - `numOfConnections` &lt;number&gt; Number of HTTP GET connections to use for performing the download
 - `saveDirectory` &lt;string&gt; Directory to save the downloaded file (Optional)
+- `filename` &lt;string&gt; Filename to save the downloaded file to (Optional)
 
 Starts the download operation from the `url`.
 
