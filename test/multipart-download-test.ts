@@ -8,6 +8,22 @@ import TestConfig from './test-config';
 import MultipartDownload from '../src/models/multipart-download';
 
 describe('Multipart download', () => {
+    it('download with Accept-Ranges header without specifying number of connections', function(done) {
+        this.timeout(TestConfig.Timeout);
+
+        let fileContentLengthCounter: number = 0;
+
+        new MultipartDownload()
+            .start(TestConfig.AcceptRangesSupportedUrl.url)
+            .on('data', (data, offset) => {
+                fileContentLengthCounter += data.length;
+            })
+            .on('end', () => {
+                expect(fileContentLengthCounter).to.equal(TestConfig.AcceptRangesSupportedUrl.contentLength);
+                done();
+            });
+    });
+    
     it('download with Accept-Ranges header without saving file', function(done) {
         this.timeout(TestConfig.Timeout);
 

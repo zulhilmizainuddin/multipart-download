@@ -11,12 +11,17 @@ import PartialDownload, {PartialDownloadRange} from '../models/partial-download'
 import PartialRequestQuery, {PartialRequestMetadata} from '../models/partial-request-query';
 
 export interface MultipartOperation {
-    start(url: string, numOfConnections: number, saveDirectory?: string): MultipartOperation;
+    start(url: string, numOfConnections?: number, saveDirectory?: string): MultipartOperation;
 }
 
 export default class MultipartDownload extends events.EventEmitter implements MultipartOperation {
+    private static readonly DEFAULT_NUMBER_OF_CONNECTIONS: number = 1; 
 
-    public start(url: string, numOfConnections: number, saveDirectory?: string): MultipartDownload {
+    public start(url: string, numOfConnections?: number, saveDirectory?: string): MultipartDownload {
+        if (!numOfConnections) {
+            numOfConnections = MultipartDownload.DEFAULT_NUMBER_OF_CONNECTIONS;
+        }
+
         const validationError: Error = this.validateInputs(url, numOfConnections, saveDirectory);
         if (validationError) {
             throw validationError;
