@@ -1,5 +1,6 @@
 import fs = require('fs');
 import validator = require('validator');
+import validFilename = require('valid-filename');
 
 export default class Validation {
     public static isUrl(url: string): boolean {
@@ -23,5 +24,9 @@ export default class Validation {
         }
         
         return isDirectory;
+    }
+
+    public static isValidFileName(fileName: string): boolean {
+        return validFilename(fileName);
     }
 }

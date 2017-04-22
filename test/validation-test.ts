@@ -37,4 +37,18 @@ describe('Input validation', () => {
 
         expect(result).to.not.be.true;
     });
+
+    it('is valid file name', () => {
+        const fileName: string = 'grumpy_cat.jpg';
+        const result: boolean = Validation.isValidFileName(fileName);
+
+        expect(result).to.be.true;
+    });
+
+    it('is invalid file name', () => {
+        const fileName: string = 'grumpy*cat.jpg';
+        const result: boolean = Validation.isValidFileName(fileName);
+
+        expect(result).to.not.be.true;
+    });
 });

@@ -20,7 +20,7 @@ describe('Partial request query', () => {
             });
     });
 
-    it('without Accept-Ranges header', function(done) {
+    xit('without Accept-Ranges header', function(done) {
         this.timeout(TestConfig.Timeout);
 
         const partialRequestQuery: PartialRequestQuery = new PartialRequestQuery();

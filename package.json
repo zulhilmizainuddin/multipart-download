@@ -26,6 +26,7 @@
   ],
   "dependencies": {
     "request": "^2.79.0",
+    "valid-filename": "^2.0.1",
     "validator": "^6.2.1"
   },
   "devDependencies": {
