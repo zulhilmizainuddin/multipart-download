@@ -8,10 +8,12 @@ Speed up download of a single file with multiple HTTP GET connections running in
 
 MultipartDownload is an `EventEmitter`.
 
-### start(url[, numOfConnections, saveDirectory])
+### start(url[, options])
 - `url` &lt;string&gt; Url of file to be downloaded
-- `numOfConnections` &lt;number&gt; Number of HTTP GET connections to use for performing the download (Optional)
-- `saveDirectory` &lt;string&gt; Directory to save the downloaded file (Optional)
+- `options` &lt;StartOptions&gt; Download options (Optional)
+  - `numOfConnections` &lt;number&gt; Number of HTTP GET connections to use for performing the download (Optional)
+  - `saveDirectory` &lt;string&gt; Directory to save the downloaded file (Optional)
+  - `fileName` &lt;string&gt; Set name of the downloaded file (Optional)
 
 Starts the download operation from the `url`.
 
@@ -22,6 +24,9 @@ If the `numOfConnections` parameter is not provided, a single connection will be
 
 If the `saveDirectory` parameter is provided, the downloaded file will be saved to the `saveDirectory`.
 If the `saveDirectory` parameter is not provided, the downloaded file will not be saved.
+
+If the `fileName` parameter is provided, the downloaded file will be renamed to `fileName`.
+If the `fileName` parameter is not provided, the downloaded file will maintain its original file name.
 
 #### Event: 'data'
 - `data` &lt;string&gt; | &lt;Buffer&gt; Chunk of data received
@@ -35,6 +40,8 @@ The file being downloaded can be manually constructed and manipulated using the 
 `filePath` is the location of the saved file if the `saveDirectory` parameter is provided.
 `filePath` will be `null` if the `saveDirectory` parameter is not provided.
 
+### ~~start(url[, numOfConnections, saveDirectory])~~ :exclamation: DEPRECATED
+
 ### Example
 
 ```javascript
@@ -44,7 +51,11 @@ const MultipartDownload = require('multipart-download');
 
 try {
   new MultipartDownload()
-    .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', 5, os.tmpdir())
+    .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
+      numOfConnections: 5,
+      saveDirectory: os.tmpDir(),
+      fileName: 'kitty.png'
+    })
     .on('data', (data, offset) => {
       // manipulate data here
     })
