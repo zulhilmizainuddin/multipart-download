@@ -97,12 +97,18 @@ export default class MultipartDownload extends events.EventEmitter implements Mu
                             }
                         })
                         .on('end', () => {
-                            if (options.saveDirectory) {
-                                writeStream.end();
-                            }
+                            const inspectEndCounterAndEmitEndEvent = (): void => {
+                                if (++endCounter === options.numOfConnections) {
+                                    this.emit('end', filePath);
+                                }
+                            };
 
-                            if (++endCounter === options.numOfConnections) {
-                                this.emit('end', filePath);
+                            if (options.saveDirectory) {
+                                writeStream.end(() => {
+                                    inspectEndCounterAndEmitEndEvent();
+                                });
+                            } else {
+                                inspectEndCounterAndEmitEndEvent();
                             }
                         });
                 }
