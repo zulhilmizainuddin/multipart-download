@@ -1,6 +1,6 @@
 import {PartialDownloadRange} from '../models/partial-download';
 
-export default class FileSegmentation {
+export class FileSegmentation {
     public static getSegmentsRange(fileSize: number, numOfSegments: number): PartialDownloadRange[]  {
         const segmentSizes: number[] = FileSegmentation.getSegmentsSize(fileSize, numOfSegments);
 

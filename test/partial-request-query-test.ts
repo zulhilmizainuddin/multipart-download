@@ -1,9 +1,9 @@
 import {expect} from 'chai';
 
-import TestConfig from './test-config';
+import {TestConfig} from './test-config';
 
-import AcceptRanges from '../src/models/accept-ranges';
-import PartialRequestQuery from '../src/models/partial-request-query';
+import {AcceptRanges} from '../src/models/accept-ranges';
+import {PartialRequestQuery} from '../src/models/partial-request-query';
 
 describe('Partial request query', () => {
     it('with Accept-Ranges header', function(done) {

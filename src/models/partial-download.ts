@@ -1,14 +1,14 @@
 import events = require('events');
 import request = require('request');
 
-import AcceptRanges from '../models/accept-ranges';
+import {AcceptRanges} from '../models/accept-ranges';
 
 export interface PartialDownloadRange {
     readonly start: number;
     readonly end: number;
 }
 
-export default class PartialDownload extends events.EventEmitter {
+export class PartialDownload extends events.EventEmitter {
 
     public start(url: string, range: PartialDownloadRange): PartialDownload {
 

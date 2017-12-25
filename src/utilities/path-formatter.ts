@@ -1,6 +1,6 @@
 import path = require('path');
 
-export default class PathFormatter {
+export class PathFormatter {
     public static format(directory: string, filename: string): string {
         const fullPath: string = `${directory}${path.sep}${filename}`;
 

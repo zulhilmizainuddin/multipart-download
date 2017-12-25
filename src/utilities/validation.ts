@@ -2,7 +2,7 @@ import fs = require('fs');
 import validator = require('validator');
 import validFilename = require('valid-filename');
 
-export default class Validation {
+export class Validation {
     public static isUrl(url: string): boolean {
         return validator.isURL(url);
     }

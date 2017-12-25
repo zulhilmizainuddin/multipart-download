@@ -1,14 +1,14 @@
 import events = require('events');
 import fs = require('fs');
 
-import FileSegmentation from '../utilities/file-segmentation';
-import PathFormatter from '../utilities/path-formatter';
-import UrlParser from '../utilities/url-parser';
-import Validation from '../utilities/validation';
+import {FileSegmentation} from '../utilities/file-segmentation';
+import {PathFormatter} from '../utilities/path-formatter';
+import {UrlParser} from '../utilities/url-parser';
+import {Validation} from '../utilities/validation';
 
-import AcceptRanges from '../models/accept-ranges';
-import PartialDownload, {PartialDownloadRange} from '../models/partial-download';
-import PartialRequestQuery, {PartialRequestMetadata} from '../models/partial-request-query';
+import {AcceptRanges} from '../models/accept-ranges';
+import {PartialDownload, PartialDownloadRange} from '../models/partial-download';
+import {PartialRequestQuery, PartialRequestMetadata} from '../models/partial-request-query';
 import {StartOptions} from '../models/start-options';
 
 export interface MultipartOperation {
@@ -16,7 +16,7 @@ export interface MultipartOperation {
     start(url: string, numOfConnections?: number, saveDirectory?: string): MultipartOperation;
 }
 
-export default class MultipartDownload extends events.EventEmitter implements MultipartOperation {
+export class MultipartDownload extends events.EventEmitter implements MultipartOperation {
     private static readonly DEFAULT_NUMBER_OF_CONNECTIONS: number = 1;
     private static readonly SINGLE_CONNECTION: number = 1;
 

@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 
-import UrlParser from '../src/utilities/url-parser';
+import {UrlParser} from '../src/utilities/url-parser';
 
 describe('Url parser', () => {
     it('get filename from url', () => {

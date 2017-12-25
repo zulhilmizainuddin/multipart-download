@@ -1,6 +1,6 @@
 import url = require('url');
 
-export default class UrlParser {
+export class UrlParser {
     public static getFilename(fileUrl: string): string {
         const parsedUrl: url.Url = url.parse(fileUrl);
 

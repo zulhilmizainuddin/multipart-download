@@ -5,7 +5,7 @@ export interface PartialRequestMetadata {
     readonly contentLength: number;
 }
 
-export default class PartialRequestQuery {
+export class PartialRequestQuery {
     public getMetadata(url: string): Promise<PartialRequestMetadata> {
 
         return new Promise<PartialRequestMetadata>((resolve, reject) => {

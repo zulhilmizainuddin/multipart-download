@@ -3,9 +3,9 @@ import os = require('os');
 
 import {expect} from 'chai';
 
-import TestConfig from './test-config';
+import {TestConfig} from './test-config';
 
-import MultipartDownload from '../src/models/multipart-download';
+import {MultipartDownload} from '../src/models/multipart-download';
 import {StartOptions} from '../src/models/start-options';
 
 describe('Multipart download', () => {
