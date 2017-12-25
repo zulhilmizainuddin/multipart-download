@@ -7,6 +7,8 @@ import {UrlParser} from '../utilities/url-parser';
 import {Validation} from '../utilities/validation';
 
 import {AcceptRanges} from '../models/accept-ranges';
+import {FileOperation} from '../models/file-operation';
+import {Operation} from "../models/operation";
 import {PartialDownload, PartialDownloadRange} from '../models/partial-download';
 import {PartialRequestQuery, PartialRequestMetadata} from '../models/partial-request-query';
 import {StartOptions} from '../models/start-options';
@@ -75,43 +77,19 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
                     options.numOfConnections = MultipartDownload.SINGLE_CONNECTION;
                 }
 
-                let filePath: string = null;
+                let operation: Operation;
                 if (options.saveDirectory) {
-                    filePath = this.createFile(url, options.saveDirectory, options.fileName);
+                    operation = new FileOperation(options.saveDirectory, options.fileName);
                 }
 
-                let writeStream: fs.WriteStream;
-                let endCounter: number = 0;
-
-                const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(metadata.contentLength, options.numOfConnections);
-                for (let segmentRange of segmentsRange) {
-
-                    new PartialDownload()
-                        .start(url, segmentRange)
-                        .on('data', (data, offset) => {
-                            this.emit('data', data, offset);
-
-                            if (options.saveDirectory) {
-                                writeStream = fs.createWriteStream(filePath, {flags: 'r+', start: offset});
-                                writeStream.write(data);
-                            }
-                        })
-                        .on('end', () => {
-                            const inspectEndCounterAndEmitEndEvent = (): void => {
-                                if (++endCounter === options.numOfConnections) {
-                                    this.emit('end', filePath);
-                                }
-                            };
-
-                            if (options.saveDirectory) {
-                                writeStream.end(() => {
-                                    inspectEndCounterAndEmitEndEvent();
-                                });
-                            } else {
-                                inspectEndCounterAndEmitEndEvent();
-                            }
-                        });
-                }
+                operation
+                    .start(url, metadata.contentLength, options.numOfConnections)
+                    .on('data', (data, offset) => {
+                        this.emit('data', data, offset);
+                    })
+                    .on('end', (output) => {
+                        this.emit('end', output);
+                    });
             })
             .catch((err) => {
                 throw err;
@@ -144,15 +122,5 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
         }
 
         return null;
-    }
-
-    private createFile(url: string, directory: string, fileName: string): string {
-        const file: string = fileName ? fileName: UrlParser.getFilename(url);
-
-        const filePath: string = PathFormatter.format(directory, file);
-
-        fs.createWriteStream(filePath).end();
-
-        return filePath;
     }
 }
