@@ -7,6 +7,7 @@ import {UrlParser} from '../utilities/url-parser';
 import {Validation} from '../utilities/validation';
 
 import {AcceptRanges} from '../models/accept-ranges';
+import {BufferOperation} from '../models/buffer-operation';
 import {DefaultOperation} from '../models/default-operation';
 import {FileOperation} from '../models/file-operation';
 import {Operation} from "../models/operation";
@@ -79,7 +80,9 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
                 }
 
                 let operation: Operation;
-                if (options.saveDirectory) {
+                if (options.writeToBuffer) {
+                    operation = new BufferOperation();
+                } else if (options.saveDirectory) {
                     operation = new FileOperation(options.saveDirectory, options.fileName);
                 } else {
                     operation = new DefaultOperation();
