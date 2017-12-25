@@ -12,7 +12,7 @@ export class FileOperation implements Operation {
 
     private readonly emitter: events.EventEmitter = new events.EventEmitter();
 
-    public constructor(private saveDirectory: string, private fileName: string) { }
+    public constructor(private saveDirectory: string, private fileName?: string) { }
 
     public start(url: string, contentLength: number, numOfConnections: number): events.EventEmitter {
         const filePath = this.createFile(url, this.saveDirectory, this.fileName);
@@ -43,7 +43,7 @@ export class FileOperation implements Operation {
         return this.emitter;
     }
 
-    private createFile(url: string, directory: string, fileName: string): string {
+    private createFile(url: string, directory: string, fileName?: string): string {
         const file: string = fileName ? fileName: UrlParser.getFilename(url);
 
         const filePath: string = PathFormatter.format(directory, file);
