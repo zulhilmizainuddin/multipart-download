@@ -7,6 +7,7 @@ import {UrlParser} from '../utilities/url-parser';
 import {Validation} from '../utilities/validation';
 
 import {AcceptRanges} from '../models/accept-ranges';
+import {DefaultOperation} from '../models/default-operation';
 import {FileOperation} from '../models/file-operation';
 import {Operation} from "../models/operation";
 import {PartialDownload, PartialDownloadRange} from '../models/partial-download';
@@ -80,6 +81,8 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
                 let operation: Operation;
                 if (options.saveDirectory) {
                     operation = new FileOperation(options.saveDirectory, options.fileName);
+                } else {
+                    operation = new DefaultOperation();
                 }
 
                 operation

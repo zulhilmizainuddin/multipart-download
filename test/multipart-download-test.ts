@@ -9,7 +9,7 @@ import {MultipartDownload} from '../src/models/multipart-download';
 import {StartOptions} from '../src/models/start-options';
 
 describe('Multipart download', () => {
-    xit('download with Accept-Ranges header without passing start options', function(done) {
+    it('download with Accept-Ranges header without passing start options', function(done) {
         this.timeout(TestConfig.Timeout);
 
         let fileContentLengthCounter: number = 0;
@@ -25,7 +25,7 @@ describe('Multipart download', () => {
             });
     });
     
-    xit('download with Accept-Ranges header without saving file', function(done) {
+    it('download with Accept-Ranges header without saving file', function(done) {
         this.timeout(TestConfig.Timeout);
 
         const options: StartOptions = {
@@ -114,7 +114,7 @@ describe('Multipart download', () => {
             });
     });
 
-    xit('download without Accept-Ranges header without saving file', function(done) {
+    it('download without Accept-Ranges header without saving file', function(done) {
         this.timeout(TestConfig.Timeout);
 
         const options: StartOptions = {
