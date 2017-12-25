@@ -9,11 +9,16 @@ describe('Buffer operation', () => {
         this.timeout(TestConfig.Timeout);
 
         const numOfConnections: number = 1;
+        let fileContentLengthCounter: number = 0;
 
         new BufferOperation()
             .start(TestConfig.AcceptRangesSupportedUrl.url, TestConfig.AcceptRangesSupportedUrl.contentLength, numOfConnections)
+            .on('data', (data, offset) => {
+                fileContentLengthCounter += data.length;
+            })
             .on('end', (buffer) => {
                 expect(buffer.length).to.be.equal(TestConfig.AcceptRangesSupportedUrl.contentLength);
+                expect(fileContentLengthCounter).to.equal(TestConfig.AcceptRangesSupportedUrl.contentLength);
 
                 done();
             });
@@ -23,11 +28,16 @@ describe('Buffer operation', () => {
         this.timeout(TestConfig.Timeout);
 
         const numOfConnections: number = 5;
+        let fileContentLengthCounter: number = 0;
 
         new BufferOperation()
             .start(TestConfig.AcceptRangesSupportedUrl.url, TestConfig.AcceptRangesSupportedUrl.contentLength, numOfConnections)
+            .on('data', (data, offset) => {
+                fileContentLengthCounter += data.length;
+            })
             .on('end', (buffer) => {
                 expect(buffer.length).to.be.equal(TestConfig.AcceptRangesSupportedUrl.contentLength);
+                expect(fileContentLengthCounter).to.equal(TestConfig.AcceptRangesSupportedUrl.contentLength);
 
                 done();
             });
