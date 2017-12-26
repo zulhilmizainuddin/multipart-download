@@ -12,6 +12,7 @@ MultipartDownload is an `EventEmitter`.
 - `url` &lt;string&gt; Url of file to be downloaded
 - `options` &lt;StartOptions&gt; Download options (Optional)
   - `numOfConnections` &lt;number&gt; Number of HTTP GET connections to use for performing the download (Optional)
+  - `writeToBuffer` &lt;boolean&gt; Store downloaded data to buffer (Optional)
   - `saveDirectory` &lt;string&gt; Directory to save the downloaded file (Optional)
   - `fileName` &lt;string&gt; Set name of the downloaded file (Optional)
 
@@ -22,9 +23,9 @@ If the target server does not support partial requests, only a single HTTP GET c
 
 If the `numOfConnections` parameter is not provided, a single connection will be used.
 
-If the `saveDirectory` parameter is provided, the downloaded file will be saved to the `saveDirectory`.
-If the `saveDirectory` parameter is not provided, the downloaded file will not be saved.
+If the `writeToBuffer` parameter is set to `true`, the downloaded file will be written into a buffer.
 
+If the `saveDirectory` parameter is provided, the downloaded file will be saved to the `saveDirectory`.
 If the `fileName` parameter is provided, the downloaded file will be renamed to `fileName`.
 If the `fileName` parameter is not provided, the downloaded file will maintain its original file name.
 
@@ -35,14 +36,62 @@ If the `fileName` parameter is not provided, the downloaded file will maintain i
 The file being downloaded can be manually constructed and manipulated using the `data` and `offset` received. 
 
 #### Event: 'end'
-- `filePath` &lt;string&gt; Downloaded file saved path
+- `output` &lt;string&gt; Downloaded file buffer or downloaded file saved path
 
-`filePath` is the location of the saved file if the `saveDirectory` parameter is provided.
-`filePath` will be `null` if the `saveDirectory` parameter is not provided.
+`output` is the buffer of the downloaded file if the `writeToBuffer` parameter is set to `true`.
+
+`output` is the location of the saved file if the `saveDirectory` parameter is provided.
+
+`output` will be `null` if `writeToBuffer` is not set to `true` or `saveDirectory` parameter is not provided.
 
 ### ~~start(url[, numOfConnections, saveDirectory])~~ :exclamation: DEPRECATED
 
 ### Example
+
+#### Download without writing to buffer or saving to file
+
+```javascript
+const MultipartDownload = require('multipart-download');
+
+try {
+  new MultipartDownload()
+    .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
+      numOfConnections: 5
+    })
+    .on('data', (data, offset) => {
+      // manipulate data here
+    })
+    .on('end', () => {
+
+    });
+} catch (err) {
+  console.log(err);
+}
+```
+
+#### Download and write to buffer
+
+```javascript
+const MultipartDownload = require('multipart-download');
+
+try {
+  new MultipartDownload()
+    .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
+      numOfConnections: 5,
+      writeToBuffer: true
+    })
+    .on('data', (data, offset) => {
+      // manipulate data here
+    })
+    .on('end', (output) => {
+      console.log(`Buffer: ${buffer}`);
+    });
+} catch (err) {
+  console.log(err);
+}
+```
+
+#### Download and save to file
 
 ```javascript
 const os = require('os');
@@ -53,14 +102,14 @@ try {
   new MultipartDownload()
     .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
       numOfConnections: 5,
-      saveDirectory: os.tmpDir(),
+      saveDirectory: os.tmpdir(),
       fileName: 'kitty.png'
     })
     .on('data', (data, offset) => {
       // manipulate data here
     })
-    .on('end', (filePath) => {
-      console.log(`Downloaded file path: ${filePath}`);
+    .on('end', (output) => {
+      console.log(`Downloaded file path: ${output}`);
     });
 } catch (err) {
   console.log(err);
