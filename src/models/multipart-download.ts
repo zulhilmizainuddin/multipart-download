@@ -1,19 +1,12 @@
 import events = require('events');
-import fs = require('fs');
 
-import {FileSegmentation} from '../utilities/file-segmentation';
-import {PathFormatter} from '../utilities/path-formatter';
-import {UrlParser} from '../utilities/url-parser';
 import {Validation} from '../utilities/validation';
 
-import {AcceptRanges} from '../models/accept-ranges';
-import {BufferOperation} from '../models/buffer-operation';
-import {DefaultOperation} from '../models/default-operation';
-import {FileOperation} from '../models/file-operation';
-import {Operation} from "../models/operation";
-import {PartialDownload, PartialDownloadRange} from '../models/partial-download';
-import {PartialRequestQuery, PartialRequestMetadata} from '../models/partial-request-query';
-import {StartOptions} from '../models/start-options';
+import {AcceptRanges} from './accept-ranges';
+import {Operation} from "./operation";
+import {OperationFactory} from './operation-factory';
+import {PartialRequestQuery, PartialRequestMetadata} from './partial-request-query';
+import {StartOptions} from './start-options';
 
 export interface MultipartOperation {
     start(url: string, options?: StartOptions): MultipartOperation;
@@ -79,15 +72,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
                     options.numOfConnections = MultipartDownload.SINGLE_CONNECTION;
                 }
 
-                let operation: Operation;
-                if (options.writeToBuffer) {
-                    operation = new BufferOperation();
-                } else if (options.saveDirectory) {
-                    operation = new FileOperation(options.saveDirectory, options.fileName);
-                } else {
-                    operation = new DefaultOperation();
-                }
-
+                const operation: Operation = OperationFactory.getOperation(options);
                 operation
                     .start(url, metadata.contentLength, options.numOfConnections)
                     .on('data', (data, offset) => {
