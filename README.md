@@ -84,7 +84,7 @@ try {
       // manipulate data here
     })
     .on('end', (output) => {
-      console.log(`Buffer: ${buffer}`);
+      console.log(`Downloaded file buffer: ${buffer}`);
     });
 } catch (err) {
   console.log(err);
