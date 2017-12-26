@@ -1,7 +1,7 @@
 import events = require('events');
 import request = require('request');
 
-import {AcceptRanges} from '../models/accept-ranges';
+import {AcceptRanges} from './accept-ranges';
 
 export interface PartialDownloadRange {
     readonly start: number;

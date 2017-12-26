@@ -5,8 +5,8 @@ import {FileSegmentation} from '../utilities/file-segmentation';
 import {PathFormatter} from '../utilities/path-formatter';
 import {UrlParser} from '../utilities/url-parser';
 
-import {Operation} from "../models/operation";
-import {PartialDownload, PartialDownloadRange} from '../models/partial-download';
+import {Operation} from "./operation";
+import {PartialDownload, PartialDownloadRange} from './partial-download';
 
 export class FileOperation implements Operation {
 

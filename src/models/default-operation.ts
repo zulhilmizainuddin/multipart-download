@@ -2,8 +2,8 @@ import events = require('events');
 
 import {FileSegmentation} from '../utilities/file-segmentation';
 
-import {Operation} from "../models/operation";
-import {PartialDownload, PartialDownloadRange} from '../models/partial-download';
+import {Operation} from "./operation";
+import {PartialDownload, PartialDownloadRange} from './partial-download';
 
 export class DefaultOperation implements Operation {
 
