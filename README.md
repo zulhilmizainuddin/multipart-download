@@ -29,6 +29,9 @@ If the `saveDirectory` parameter is provided, the downloaded file will be saved 
 If the `fileName` parameter is provided, the downloaded file will be renamed to `fileName`.
 If the `fileName` parameter is not provided, the downloaded file will maintain its original file name.
 
+#### Event: 'error'
+- `err` &lt;Error&gt; Emitted error
+
 #### Event: 'data'
 - `data` &lt;string&gt; | &lt;Buffer&gt; Chunk of data received
 - `offset` &lt;number&gt; Offset for the chunk of data received
@@ -53,20 +56,19 @@ The file being downloaded can be manually constructed and manipulated using the 
 ```javascript
 const MultipartDownload = require('multipart-download');
 
-try {
-  new MultipartDownload()
-    .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
-      numOfConnections: 5
-    })
-    .on('data', (data, offset) => {
-      // manipulate data here
-    })
-    .on('end', () => {
+new MultipartDownload()
+  .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
+    numOfConnections: 5
+  })
+  .on('error', (err) => {
+    // handle error here
+  })
+  .on('data', (data, offset) => {
+    // manipulate data here
+  })
+  .on('end', () => {
 
-    });
-} catch (err) {
-  console.log(err);
-}
+  });
 ```
 
 #### Download and write to buffer
@@ -74,21 +76,20 @@ try {
 ```javascript
 const MultipartDownload = require('multipart-download');
 
-try {
-  new MultipartDownload()
-    .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
-      numOfConnections: 5,
-      writeToBuffer: true
-    })
-    .on('data', (data, offset) => {
-      // manipulate data here
-    })
-    .on('end', (output) => {
-      console.log(`Downloaded file buffer: ${buffer}`);
-    });
-} catch (err) {
-  console.log(err);
-}
+new MultipartDownload()
+  .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
+    numOfConnections: 5,
+    writeToBuffer: true
+  })
+  .on('error', (err) => {
+    // handle error here
+  })
+  .on('data', (data, offset) => {
+    // manipulate data here
+  })
+  .on('end', (output) => {
+    console.log(`Downloaded file buffer: ${buffer}`);
+  });
 ```
 
 #### Download and save to file
@@ -98,20 +99,19 @@ const os = require('os');
 
 const MultipartDownload = require('multipart-download');
 
-try {
-  new MultipartDownload()
-    .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
-      numOfConnections: 5,
-      saveDirectory: os.tmpdir(),
-      fileName: 'kitty.png'
-    })
-    .on('data', (data, offset) => {
-      // manipulate data here
-    })
-    .on('end', (output) => {
-      console.log(`Downloaded file path: ${output}`);
-    });
-} catch (err) {
-  console.log(err);
-}
+new MultipartDownload()
+  .start('https://homepages.cae.wisc.edu/~ece533/images/cat.png', {
+    numOfConnections: 5,
+    saveDirectory: os.tmpdir(),
+    fileName: 'kitty.png'
+  })
+  .on('error', (err) => {
+    // handle error here
+  })
+  .on('data', (data, offset) => {
+    // manipulate data here
+  })
+  .on('end', (output) => {
+    console.log(`Downloaded file path: ${output}`);
+  });
 ```

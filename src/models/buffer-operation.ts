@@ -20,6 +20,9 @@ export class BufferOperation implements Operation {
 
             new PartialDownload()
                 .start(url, segmentRange)
+                .on('error', (err) => {
+                    this.emitter.emit('error', err);
+                })
                 .on('data', (data, offset) => {
                     this.emitter.emit('data', data, offset);
 

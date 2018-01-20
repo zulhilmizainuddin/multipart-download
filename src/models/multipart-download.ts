@@ -22,7 +22,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
 
         const validationError: Error = this.validateInputs(url, options);
         if (validationError) {
-            throw validationError;
+            this.emit('error', validationError);
         }
 
         this.execute(url, options);
@@ -65,7 +65,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
 
                 const metadataError: Error = this.validateMetadata(url, metadata);
                 if (metadataError) {
-                    throw metadataError;
+                    this.emit('error', metadataError);
                 }
 
                 if (metadata.acceptRanges !== AcceptRanges.Bytes) {
@@ -75,6 +75,9 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
                 const operation: Operation = OperationFactory.getOperation(options);
                 operation
                     .start(url, metadata.contentLength, options.numOfConnections)
+                    .on('error', (err) => {
+                        this.emit('error', err);
+                    })
                     .on('data', (data, offset) => {
                         this.emit('data', data, offset);
                     })
@@ -83,7 +86,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
                     });
             })
             .catch((err) => {
-                throw err;
+                this.emit('error', err);
             });
     }
 

@@ -22,7 +22,7 @@ export class PartialDownload extends events.EventEmitter {
         request
             .get(url, options)
             .on('error', (err) => {
-                throw err;
+                this.emit('error', err);
             })
             .on('data', (data) => {
                 this.emit('data', data, offset);
