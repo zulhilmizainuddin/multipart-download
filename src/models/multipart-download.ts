@@ -10,15 +10,14 @@ import {StartOptions} from './start-options';
 
 export interface MultipartOperation {
     start(url: string, options?: StartOptions): MultipartOperation;
-    start(url: string, numOfConnections?: number, saveDirectory?: string): MultipartOperation;
 }
 
 export class MultipartDownload extends events.EventEmitter implements MultipartOperation {
     private static readonly DEFAULT_NUMBER_OF_CONNECTIONS: number = 1;
     private static readonly SINGLE_CONNECTION: number = 1;
 
-    public start(url: string, numOfConnectionsOrOptions?: number | StartOptions, saveDirectory?: string): MultipartDownload {
-        const options: StartOptions = this.getOptions(numOfConnectionsOrOptions, saveDirectory);
+    public start(url: string, startOptions?: StartOptions): MultipartDownload {
+        const options: StartOptions = this.getOptions(startOptions);
 
         const validationError: Error = this.validateInputs(url, options);
         if (validationError) {
@@ -30,23 +29,17 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
         return this;
     }
 
-    private getOptions(numOfConnectionsOrOptions?: number | StartOptions, saveDirectory?: string): StartOptions {
+    private getOptions(startOptions?: StartOptions): StartOptions {
         let connections: number = MultipartDownload.DEFAULT_NUMBER_OF_CONNECTIONS;
         let directory: string;
         let file: string;
         
-        if (numOfConnectionsOrOptions) {
-            if (typeof numOfConnectionsOrOptions === 'object') {
-                connections = numOfConnectionsOrOptions.numOfConnections ?
-                                    numOfConnectionsOrOptions.numOfConnections : connections;
+        if (startOptions) {
+            connections = startOptions.numOfConnections ?
+                            startOptions.numOfConnections : connections;
 
-                directory = numOfConnectionsOrOptions.saveDirectory;
-                file = numOfConnectionsOrOptions.fileName;
-            } else {
-                connections = numOfConnectionsOrOptions;
-                directory = saveDirectory;
-                file = null;
-            }
+            directory = startOptions.saveDirectory;
+            file = startOptions.fileName;
         }
 
         const options: StartOptions = {

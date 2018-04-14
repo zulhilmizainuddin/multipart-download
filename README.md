@@ -47,7 +47,7 @@ The file being downloaded can be manually constructed and manipulated using the 
 
 `output` will be `null` if `writeToBuffer` is not set to `true` or `saveDirectory` parameter is not provided.
 
-### ~~start(url[, numOfConnections, saveDirectory])~~ :exclamation: DEPRECATED
+### ~~start(url[, numOfConnections, saveDirectory])~~ :exclamation: DEPRECATED and REMOVED in v1.0.0
 
 ### Example
 
