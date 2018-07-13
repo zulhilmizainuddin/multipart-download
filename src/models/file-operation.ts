@@ -15,44 +15,37 @@ export class FileOperation implements Operation {
     public constructor(private saveDirectory: string, private fileName?: string) { }
 
     public start(url: string, contentLength: number, numOfConnections: number): events.EventEmitter {
-        const filePath = this.createFile(url, this.saveDirectory, this.fileName);
+        const file: string = this.fileName ? this.fileName: UrlParser.getFilename(url);
+        const filePath: string = PathFormatter.format(this.saveDirectory, file);
 
-        let writeStream: fs.WriteStream;
         let endCounter: number = 0;
+        
+        fs.open(filePath, 'w+', 0o644, (err, fd) => {
+            if (err) throw err;
+            
+            const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(contentLength, numOfConnections);
+            
+            for (let segmentRange of segmentsRange) {
 
-        const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(contentLength, numOfConnections);
-        for (let segmentRange of segmentsRange) {
-
-            new PartialDownload()
-                .start(url, segmentRange)
-                .on('error', (err) => {
-                    this.emitter.emit('error', err);
-                })
-                .on('data', (data, offset) => {
-                    this.emitter.emit('data', data, offset);
-
-                    writeStream = fs.createWriteStream(filePath, {flags: 'r+', start: offset});
-                    writeStream.write(data);
-                })
-                .on('end', () => {
-                    writeStream.end(() => {
+                new PartialDownload()
+                    .start(url, segmentRange)
+                    .on('error', (err) => {
+                        this.emitter.emit('error', err);
+                    })
+                    .on('data', (data, offset) => {
+                        fs.write(fd, data, 0, data.length, offset, (err) => {
+                          this.emitter.emit('data', data, offset);
+                        });
+                    })
+                    .on('end', () => {
                         if (++endCounter === numOfConnections) {
-                            this.emitter.emit('end', filePath);
+                            fs.close(fd, (err) => {
+                                this.emitter.emit('end', filePath);
+                            });
                         }
                     });
-                });
-        }
+            }
 
         return this.emitter;
-    }
-
-    private createFile(url: string, directory: string, fileName?: string): string {
-        const file: string = fileName ? fileName: UrlParser.getFilename(url);
-
-        const filePath: string = PathFormatter.format(directory, file);
-
-        fs.createWriteStream(filePath).end();
-
-        return filePath;
     }
 }
