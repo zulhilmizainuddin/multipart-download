@@ -23,7 +23,8 @@ export class FileOperation implements Operation {
         fs.open(filePath, 'w+', 0o644, (err, fd) => {
             if (err) throw err;
             
-            const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(contentLength, numOfConnections);
+            const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(contentLength, 
+numOfConnections);
             
             for (let segmentRange of segmentsRange) {
 
@@ -46,6 +47,8 @@ export class FileOperation implements Operation {
                     });
             }
 
+        });
+        
         return this.emitter;
     }
 }
