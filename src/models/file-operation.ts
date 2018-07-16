@@ -21,10 +21,12 @@ export class FileOperation implements Operation {
         let endCounter: number = 0;
         
         fs.open(filePath, 'w+', 0o644, (err, fd) => {
-            if (err) throw err;
+            if (err) {
+                this.emitter.emit('error', err);
+                return 
+            }
             
-            const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(contentLength, 
-numOfConnections);
+            const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(contentLength, numOfConnections);
             
             for (let segmentRange of segmentsRange) {
 
@@ -35,13 +37,21 @@ numOfConnections);
                     })
                     .on('data', (data, offset) => {
                         fs.write(fd, data, 0, data.length, offset, (err) => {
-                          this.emitter.emit('data', data, offset);
+                            if (err) {
+                                this.emitter.emit('error', err);
+                            } else {
+                                this.emitter.emit('data', data, offset);
+                            }
                         });
                     })
                     .on('end', () => {
                         if (++endCounter === numOfConnections) {
                             fs.close(fd, (err) => {
-                                this.emitter.emit('end', filePath);
+                                if (err) {
+                                    this.emitter.emit('error', err);
+                                } else {
+                                    this.emitter.emit('end', filePath);
+                                }
                             });
                         }
                     });
@@ -51,4 +61,5 @@ numOfConnections);
         
         return this.emitter;
     }
+
 }
