@@ -6,10 +6,14 @@ export interface PartialRequestMetadata {
 }
 
 export class PartialRequestQuery {
-    public getMetadata(url: string): Promise<PartialRequestMetadata> {
+    public getMetadata(url: string, headers?: request.Headers): Promise<PartialRequestMetadata> {
 
         return new Promise<PartialRequestMetadata>((resolve, reject) => {
-            request.head(url, (err, res, body) => {
+            const options: request.CoreOptions = {};
+
+            options.headers = headers || null;
+
+            request.head(url, options, (err, res, body) => {
                 if (err) {
                     reject(err);
                 }

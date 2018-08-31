@@ -1,5 +1,7 @@
 import events = require('events');
 
+import {Headers} from 'request';
+
 import {Validation} from '../utilities/validation';
 
 import {AcceptRanges} from './accept-ranges';
@@ -33,6 +35,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
         let connections: number = MultipartDownload.DEFAULT_NUMBER_OF_CONNECTIONS;
         let directory: string;
         let file: string;
+        let headers: Headers;
         
         if (startOptions) {
             connections = startOptions.numOfConnections ?
@@ -40,12 +43,14 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
 
             directory = startOptions.saveDirectory;
             file = startOptions.fileName;
+            headers = startOptions.headers;
         }
 
         const options: StartOptions = {
             numOfConnections: connections,
             saveDirectory: directory,
-            fileName: file
+            fileName: file,
+            headers: headers
         };
 
         return options;

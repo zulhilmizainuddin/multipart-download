@@ -10,13 +10,11 @@ export interface PartialDownloadRange {
 
 export class PartialDownload extends events.EventEmitter {
 
-    public start(url: string, range: PartialDownloadRange): PartialDownload {
+    public start(url: string, range: PartialDownloadRange, headers?: request.Headers): PartialDownload {
+        const options: request.CoreOptions = {};
 
-        const options: request.CoreOptions = {
-                    headers: {
-                        Range: `${AcceptRanges.Bytes}=${range.start}-${range.end}`
-                    }
-                };
+        options.headers = headers || {};
+        options.headers.Range = `${AcceptRanges.Bytes}=${range.start}-${range.end}`; 
 
         let offset: number = range.start;
         request
