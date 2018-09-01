@@ -15,6 +15,7 @@ MultipartDownload is an `EventEmitter`.
   - `writeToBuffer` &lt;boolean&gt; Store downloaded data to buffer (Optional)
   - `saveDirectory` &lt;string&gt; Directory to save the downloaded file (Optional)
   - `fileName` &lt;string&gt; Set name of the downloaded file (Optional)
+  - `headers` &lt;Object&gt; Set custom HTTP headers (Optional)
 
 Starts the download operation from the `url`.
 
@@ -26,8 +27,11 @@ If the `numOfConnections` parameter is not provided, a single connection will be
 If the `writeToBuffer` parameter is set to `true`, the downloaded file will be written into a buffer.
 
 If the `saveDirectory` parameter is provided, the downloaded file will be saved to the `saveDirectory`.
+
 If the `fileName` parameter is provided, the downloaded file will be renamed to `fileName`.
 If the `fileName` parameter is not provided, the downloaded file will maintain its original file name.
+
+If the `headers` parameter is provided, the headers will be included in the HTTP request.
 
 #### Event: 'error'
 - `err` &lt;Error&gt; Emitted error
