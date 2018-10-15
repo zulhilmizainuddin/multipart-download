@@ -9,11 +9,9 @@ export class PartialRequestQuery {
     public getMetadata(url: string, headers?: request.Headers): Promise<PartialRequestMetadata> {
 
         return new Promise<PartialRequestMetadata>((resolve, reject) => {
-            const options: request.CoreOptions = {};
+            const options: request.CoreOptions = {'headers': {'Range': 'bytes=0-0'}};
 
-            options.headers = headers || null;
-
-            request.head(url, options, (err, res, body) => {
+            request.get(url, options, (err, res, body) => {
                 if (err) {
                     reject(err);
                 }
