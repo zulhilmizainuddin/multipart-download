@@ -1,6 +1,6 @@
 import fs = require('fs');
-import validator = require('validator');
 import validFilename = require('valid-filename');
+import validator = require('validator');
 
 export class Validation {
     public static isUrl(url: string): boolean {
@@ -19,10 +19,10 @@ export class Validation {
         try {
             const stat: fs.Stats = fs.lstatSync(directory);
             isDirectory = stat.isDirectory();
-        } catch(err) {
+        } catch (err) {
             isDirectory = false;
         }
-        
+
         return isDirectory;
     }
 

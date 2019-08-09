@@ -5,7 +5,7 @@ import {Operation} from './operation';
 import {StartOptions} from './start-options';
 
 export class OperationFactory {
-    static getOperation(options: StartOptions): Operation {
+    public static getOperation(options: StartOptions): Operation {
 
         let operation: Operation;
         if (options.writeToBuffer) {

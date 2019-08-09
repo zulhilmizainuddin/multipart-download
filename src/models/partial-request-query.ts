@@ -15,15 +15,15 @@ export class PartialRequestQuery {
 
             request.head(url, options, (err, res, body) => {
                 if (err) {
-                    reject(err);
+                    return reject(err);
                 }
 
                 const metadata = {
                     acceptRanges: res.headers['accept-ranges'],
-                    contentLength: parseInt(res.headers['content-length'])
+                    contentLength: parseInt(res.headers['content-length'], 10),
                 };
 
-                resolve(metadata);
+                return resolve(metadata);
             });
         });
     }

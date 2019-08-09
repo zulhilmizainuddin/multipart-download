@@ -5,9 +5,9 @@ import {Headers} from 'request';
 import {Validation} from '../utilities/validation';
 
 import {AcceptRanges} from './accept-ranges';
-import {Operation} from "./operation";
+import {Operation} from './operation';
 import {OperationFactory} from './operation-factory';
-import {PartialRequestQuery, PartialRequestMetadata} from './partial-request-query';
+import {PartialRequestMetadata, PartialRequestQuery} from './partial-request-query';
 import {StartOptions} from './start-options';
 
 export interface MultipartOperation {
@@ -36,7 +36,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
         let directory: string;
         let file: string;
         let headers: Headers;
-        
+
         if (startOptions) {
             connections = startOptions.numOfConnections ?
                             startOptions.numOfConnections : connections;
@@ -50,7 +50,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
             numOfConnections: connections,
             saveDirectory: directory,
             fileName: file,
-            headers: headers
+            headers,
         };
 
         return options;

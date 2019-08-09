@@ -1,12 +1,14 @@
 language: node_js
-node_js: "node"
+node_js:
+  - node
+  - lts/*
 
 dist: trusty
 
 install:
- - npm install -g typescript
  - npm install
 
 script:
- - tsc -p .
+ - npm run lint:dry
+ - npm run build
  - npm test

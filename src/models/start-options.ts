@@ -1,4 +1,4 @@
-import {Headers} from "request";
+import {Headers} from 'request';
 
 export interface StartOptions {
     numOfConnections?: number;

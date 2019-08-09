@@ -14,7 +14,7 @@ export class PartialDownload extends events.EventEmitter {
         const options: request.CoreOptions = {};
 
         options.headers = headers || {};
-        options.headers.Range = `${AcceptRanges.Bytes}=${range.start}-${range.end}`; 
+        options.headers.Range = `${AcceptRanges.Bytes}=${range.start}-${range.end}`;
 
         let offset: number = range.start;
         request

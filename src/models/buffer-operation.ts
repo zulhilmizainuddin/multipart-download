@@ -3,7 +3,7 @@ import fs = require('fs');
 
 import {FileSegmentation} from '../utilities/file-segmentation';
 
-import {Operation} from "./operation";
+import {Operation} from './operation';
 import {PartialDownload, PartialDownloadRange} from './partial-download';
 
 export class BufferOperation implements Operation {
@@ -16,7 +16,7 @@ export class BufferOperation implements Operation {
         let endCounter: number = 0;
 
         const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(contentLength, numOfConnections);
-        for (let segmentRange of segmentsRange) {
+        for (const segmentRange of segmentsRange) {
 
             new PartialDownload()
                 .start(url, segmentRange)
