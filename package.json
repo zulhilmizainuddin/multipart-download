@@ -32,8 +32,6 @@
   ],
   "dependencies": {
     "request": "^2.88.0",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.3",
     "valid-filename": "^2.0.1",
     "validator": "^11.1.0"
   },
@@ -43,6 +41,8 @@
     "@types/node": "^10.14.15",
     "@types/request": "^2.48.2",
     "chai": "^4.2.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
   }
 }
