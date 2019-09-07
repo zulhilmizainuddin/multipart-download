@@ -91,7 +91,7 @@ new MultipartDownload()
   .on('data', (data, offset) => {
     // manipulate data here
   })
-  .on('end', (output) => {
+  .on('end', (buffer) => {
     console.log(`Downloaded file buffer: ${buffer}`);
   });
 ```
@@ -115,7 +115,7 @@ new MultipartDownload()
   .on('data', (data, offset) => {
     // manipulate data here
   })
-  .on('end', (output) => {
-    console.log(`Downloaded file path: ${output}`);
+  .on('end', (filePath) => {
+    console.log(`Downloaded file path: ${filePath}`);
   });
 ```
