@@ -6,9 +6,7 @@ import {AcceptRanges} from '../src/models/accept-ranges';
 import {PartialRequestQuery} from '../src/models/partial-request-query';
 
 describe('Partial request query', () => {
-    it('with Accept-Ranges header', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('with Accept-Ranges header', (done) => {
         const partialRequestQuery: PartialRequestQuery = new PartialRequestQuery();
 
         partialRequestQuery
@@ -18,11 +16,9 @@ describe('Partial request query', () => {
                 expect(metadata.contentLength).to.not.be.NaN;
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);;
 
-    xit('without Accept-Ranges header', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    xit('without Accept-Ranges header', (done) => {
         const partialRequestQuery: PartialRequestQuery = new PartialRequestQuery();
 
         partialRequestQuery
@@ -32,5 +28,5 @@ describe('Partial request query', () => {
                 expect(metadata.contentLength).to.not.be.NaN;
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);;
 });

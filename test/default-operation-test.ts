@@ -5,9 +5,7 @@ import {TestConfig} from './test-config';
 import {DefaultOperation} from '../src/models/default-operation';
 
 describe('Default operation', () => {
-    it('single connection download', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('single connection download', (done) => {
         const numOfConnections: number = 1;
         let fileContentLengthCounter: number = 0;
 
@@ -21,11 +19,9 @@ describe('Default operation', () => {
 
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);
 
-    it('multi connection download', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('multi connection download', (done) => {
         const numOfConnections: number = 5;
         let fileContentLengthCounter: number = 0;
 
@@ -39,5 +35,5 @@ describe('Default operation', () => {
 
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);
 });

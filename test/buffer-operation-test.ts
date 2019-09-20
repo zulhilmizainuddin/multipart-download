@@ -5,9 +5,7 @@ import {TestConfig} from './test-config';
 import {BufferOperation} from '../src/models/buffer-operation';
 
 describe('Buffer operation', () => {
-    it('single connection download', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('single connection download', (done) => {
         const numOfConnections: number = 1;
         let fileContentLengthCounter: number = 0;
 
@@ -22,11 +20,9 @@ describe('Buffer operation', () => {
 
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);
 
-    it('multi connection download', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('multi connection download', (done) => {
         const numOfConnections: number = 5;
         let fileContentLengthCounter: number = 0;
 
@@ -41,5 +37,5 @@ describe('Buffer operation', () => {
 
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);
 });

@@ -8,9 +8,7 @@ import {TestConfig} from './test-config';
 import {FileOperation} from '../src/models/file-operation';
 
 describe('File operation', () => {
-    it('single connection download', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('single connection download', (done) => {
         const numOfConnections: number = 1;
         let fileContentLengthCounter: number = 0;
 
@@ -36,11 +34,9 @@ describe('File operation', () => {
                     });
                 });
             });
-    });
+    }).timeout(TestConfig.Timeout);;
 
-    it('multi connection download and save file with name from url', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('multi connection download and save file with name from url', (done) => {
         const numOfConnections: number = 5;
         let fileContentLengthCounter: number = 0;
 
@@ -66,11 +62,9 @@ describe('File operation', () => {
                     });
                 });
             });
-    });
+    }).timeout(TestConfig.Timeout);;
 
-    it('multi connection download and save file with name with specified name', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('multi connection download and save file with name with specified name', (done) => {
         const numOfConnections: number = 5;
         let fileContentLengthCounter: number = 0;
 
@@ -96,5 +90,5 @@ describe('File operation', () => {
                     });
                 });
             });
-    });
+    }).timeout(TestConfig.Timeout);;
 });

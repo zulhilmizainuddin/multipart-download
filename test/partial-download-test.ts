@@ -5,9 +5,7 @@ import {TestConfig} from './test-config';
 import {PartialDownload} from '../src/models/partial-download';
 
 describe('Partial download', () => {
-    it('download a segment of a file', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('download a segment of a file', (done) => {
         let segmentSize: number = 0;
 
         new PartialDownload()
@@ -19,5 +17,5 @@ describe('Partial download', () => {
                 expect(segmentSize).to.equal(200);
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);;
 });

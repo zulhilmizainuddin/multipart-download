@@ -9,9 +9,7 @@ import {MultipartDownload} from '../src/models/multipart-download';
 import {StartOptions} from '../src/models/start-options';
 
 describe('Multipart download', () => {
-    it('download with Accept-Ranges header without passing start options', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('download with Accept-Ranges header without passing start options', (done) => {
         let fileContentLengthCounter: number = 0;
 
         new MultipartDownload()
@@ -23,11 +21,9 @@ describe('Multipart download', () => {
                 expect(fileContentLengthCounter).to.equal(TestConfig.AcceptRangesSupportedUrl.contentLength);
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);;
     
-    it('download with Accept-Ranges header with start options', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('download with Accept-Ranges header with start options', (done) => {
         const options: StartOptions = {
             numOfConnections: 5
         };
@@ -43,11 +39,9 @@ describe('Multipart download', () => {
                 expect(fileContentLengthCounter).to.equal(TestConfig.AcceptRangesSupportedUrl.contentLength);
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);;
 
-    it('download without Accept-Ranges header with start options', function(done) {
-        this.timeout(TestConfig.Timeout);
-
+    it('download without Accept-Ranges header with start options', (done) => {
         const options: StartOptions = {
             numOfConnections: 5
         };
@@ -63,5 +57,5 @@ describe('Multipart download', () => {
                 expect(fileContentLengthCounter).to.equal(TestConfig.AcceptRangesUnsupportedUrl.contentLength);
                 done();
             });
-    });
+    }).timeout(TestConfig.Timeout);;
 });
