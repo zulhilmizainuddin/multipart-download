@@ -32,24 +32,25 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
     }
 
     private getOptions(startOptions?: StartOptions): StartOptions {
-        let connections: number = MultipartDownload.DEFAULT_NUMBER_OF_CONNECTIONS;
-        let directory: string;
-        let file: string;
+        let numOfConnections: number = MultipartDownload.DEFAULT_NUMBER_OF_CONNECTIONS;
+        let writeToBuffer: boolean;
+        let saveDirectory: string;
+        let fileName: string;
         let headers: Headers;
 
         if (startOptions) {
-            connections = startOptions.numOfConnections ?
-                            startOptions.numOfConnections : connections;
-
-            directory = startOptions.saveDirectory;
-            file = startOptions.fileName;
+            numOfConnections = startOptions.numOfConnections || numOfConnections;
+            writeToBuffer = startOptions.writeToBuffer;
+            saveDirectory = startOptions.saveDirectory;
+            fileName = startOptions.fileName;
             headers = startOptions.headers;
         }
 
         const options: StartOptions = {
-            numOfConnections: connections,
-            saveDirectory: directory,
-            fileName: file,
+            numOfConnections,
+            writeToBuffer,
+            saveDirectory,
+            fileName,
             headers,
         };
 
