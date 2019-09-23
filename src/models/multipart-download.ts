@@ -1,7 +1,5 @@
 import events = require('events');
 
-import {Headers} from 'request';
-
 import {Validation} from '../utilities/validation';
 
 import {AcceptRanges} from './accept-ranges';
@@ -15,11 +13,10 @@ export interface MultipartOperation {
 }
 
 export class MultipartDownload extends events.EventEmitter implements MultipartOperation {
-    private static readonly DEFAULT_NUMBER_OF_CONNECTIONS: number = 1;
     private static readonly SINGLE_CONNECTION: number = 1;
 
-    public start(url: string, startOptions?: StartOptions): MultipartDownload {
-        const options: StartOptions = this.getOptions(startOptions);
+    public start(url: string, options: StartOptions = { numOfConnections: MultipartDownload.SINGLE_CONNECTION }): MultipartDownload {
+        options.numOfConnections = options.numOfConnections || MultipartDownload.SINGLE_CONNECTION;
 
         const validationError: Error = this.validateInputs(url, options);
         if (validationError) {
@@ -29,32 +26,6 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
         this.execute(url, options);
 
         return this;
-    }
-
-    private getOptions(startOptions?: StartOptions): StartOptions {
-        let numOfConnections: number = MultipartDownload.DEFAULT_NUMBER_OF_CONNECTIONS;
-        let writeToBuffer: boolean;
-        let saveDirectory: string;
-        let fileName: string;
-        let headers: Headers;
-
-        if (startOptions) {
-            numOfConnections = startOptions.numOfConnections || numOfConnections;
-            writeToBuffer = startOptions.writeToBuffer;
-            saveDirectory = startOptions.saveDirectory;
-            fileName = startOptions.fileName;
-            headers = startOptions.headers;
-        }
-
-        const options: StartOptions = {
-            numOfConnections,
-            writeToBuffer,
-            saveDirectory,
-            fileName,
-            headers,
-        };
-
-        return options;
     }
 
     private execute(url: string, options: StartOptions): void {
