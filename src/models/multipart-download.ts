@@ -30,7 +30,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
 
     private execute(url: string, options: StartOptions): void {
         new PartialRequestQuery()
-            .getMetadata(url)
+            .getMetadata(url, options.headers)
             .then((metadata) => {
 
                 const metadataError: Error = this.validateMetadata(url, metadata);
@@ -44,7 +44,7 @@ export class MultipartDownload extends events.EventEmitter implements MultipartO
 
                 const operation: Operation = OperationFactory.getOperation(options);
                 operation
-                    .start(url, metadata.contentLength, options.numOfConnections)
+                    .start(url, metadata.contentLength, options.numOfConnections, options.headers)
                     .on('error', (err) => {
                         this.emit('error', err);
                     })

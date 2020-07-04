@@ -1,4 +1,5 @@
 import events = require('events');
+import request = require('request');
 
 import {FileSegmentation} from '../utilities/file-segmentation';
 
@@ -9,14 +10,14 @@ export class DefaultOperation implements Operation {
 
     private readonly emitter: events.EventEmitter = new events.EventEmitter();
 
-    public start(url: string, contentLength: number, numOfConnections: number): events.EventEmitter {
+    public start(url: string, contentLength: number, numOfConnections: number, headers?: request.Headers): events.EventEmitter {
         let endCounter: number = 0;
 
         const segmentsRange: PartialDownloadRange[] = FileSegmentation.getSegmentsRange(contentLength, numOfConnections);
         for (const segmentRange of segmentsRange) {
 
             new PartialDownload()
-                .start(url, segmentRange)
+                .start(url, segmentRange, headers)
                 .on('error', (err) => {
                     this.emitter.emit('error', err);
                 })

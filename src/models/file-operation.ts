@@ -1,5 +1,6 @@
 import events = require('events');
 import fs = require('fs');
+import request = require('request');
 
 import {FileSegmentation} from '../utilities/file-segmentation';
 import {PathFormatter} from '../utilities/path-formatter';
@@ -14,7 +15,7 @@ export class FileOperation implements Operation {
 
     public constructor(private saveDirectory: string, private fileName?: string) { }
 
-    public start(url: string, contentLength: number, numOfConnections: number): events.EventEmitter {
+    public start(url: string, contentLength: number, numOfConnections: number, headers?: request.Headers): events.EventEmitter {
         const file: string = this.fileName ? this.fileName : UrlParser.getFilename(url);
         const filePath: string = PathFormatter.format(this.saveDirectory, file);
 
@@ -31,7 +32,7 @@ export class FileOperation implements Operation {
             for (const segmentRange of segmentsRange) {
 
                 new PartialDownload()
-                    .start(url, segmentRange)
+                    .start(url, segmentRange, headers)
                     .on('error', (error) => {
                         this.emitter.emit('error', error);
                     })
